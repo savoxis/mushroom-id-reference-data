@@ -1,0 +1,72 @@
+[
+  {
+    "syndrome": "GI irritant",
+    "toxin": "various, unspecified",
+    "onset": "20 min - 4 hr",
+    "key_genera": "many genera",
+    "severity": "mild-moderate"
+  },
+  {
+    "syndrome": "Muscarine",
+    "toxin": "muscarine",
+    "onset": "15-30 min",
+    "key_genera": "Inocybe, Clitocybe (dealbata/rivulosa)",
+    "severity": "moderate-severe, treatable (atropine)"
+  },
+  {
+    "syndrome": "Isoxazole",
+    "toxin": "ibotenic acid, muscimol",
+    "onset": "30 min - 2 hr",
+    "key_genera": "Amanita muscaria, A. pantherina",
+    "severity": "moderate, CNS effects, rarely fatal"
+  },
+  {
+    "syndrome": "Amatoxin",
+    "toxin": "amatoxins (cyclic peptides)",
+    "onset": "6-24 hr delayed",
+    "key_genera": "Amanita phalloides, A. ocreata, Galerina marginata, Lepiota spp, Conocybe/Pholiotina",
+    "severity": "critical, ~50% fatal untreated"
+  },
+  {
+    "syndrome": "Gyromitrin",
+    "toxin": "monomethylhydrazine",
+    "onset": "2-24 hr",
+    "key_genera": "Gyromitra esculenta and relatives",
+    "severity": "moderate-severe, unpredictable"
+  },
+  {
+    "syndrome": "Orellanine",
+    "toxin": "orellanine",
+    "onset": "36 hr - 3 weeks delayed",
+    "key_genera": "Cortinarius orellanus, C. rubellus",
+    "severity": "critical, delayed kidney failure"
+  },
+  {
+    "syndrome": "Allenic norleucine",
+    "toxin": "allenic norleucine",
+    "onset": "4-11 hr",
+    "key_genera": "Amanita smithiana",
+    "severity": "severe, kidney failure"
+  },
+  {
+    "syndrome": "Illudin",
+    "toxin": "illudin M/S",
+    "onset": "1-3 hr",
+    "key_genera": "Omphalotus spp (jack-o-lantern)",
+    "severity": "severe GI, rarely fatal"
+  },
+  {
+    "syndrome": "Coprine",
+    "toxin": "coprine",
+    "onset": "minutes-hours after alcohol, up to 5 days post-meal",
+    "key_genera": "Coprinopsis atramentaria",
+    "severity": "moderate, alcohol-triggered"
+  },
+  {
+    "syndrome": "Psilocybin",
+    "toxin": "psilocybin/psilocin",
+    "onset": "~1 hr",
+    "key_genera": "Psilocybe, Panaeolus, Gymnopilus",
+    "severity": "psychoactive; main real danger is confusion with Galerina"
+  }
+]

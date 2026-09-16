@@ -1,0 +1,72 @@
+[
+  {
+    "common_find": "Chanterelle",
+    "common_find_scientific": "Cantharellus spp",
+    "dangerous_species_id": "western-jack-o-lantern",
+    "dangerous_species_name": "Western Jack-O-Lantern (Omphalotus olivascens, Tier B)",
+    "field_check": "Dig the base: wood/root attachment + clustered growth = Jack-O-Lantern. True blade-like gills vs blunt false ridges is the other tell."
+  },
+  {
+    "common_find": "True morel",
+    "common_find_scientific": "Morchella spp",
+    "dangerous_species_id": "false-morel",
+    "dangerous_species_name": "False morel (Gyromitra spp, Tier A)",
+    "field_check": "Cut top to bottom: hollow all the way through = morel. Chambered/cottony/brain-like cap = Gyromitra."
+  },
+  {
+    "common_find": "Matsutake or king bolete",
+    "common_find_scientific": "Tricholoma murrillianum / Boletus spp",
+    "dangerous_species_id": "amanita-smithiana",
+    "dangerous_species_name": "Amanita smithiana (Tier A)",
+    "field_check": "Dig the whole base out. True gills + cottony ragged volva = Amanita smithiana, stop. Pores (bolete) or normal Tricholoma gills with no volva = keep checking."
+  },
+  {
+    "common_find": "Honey mushroom",
+    "common_find_scientific": "Armillaria spp",
+    "dangerous_species_id": "deadly-galerina",
+    "dangerous_species_name": "Deadly Galerina (Galerina marginata, Tier A)",
+    "field_check": "Spore print: white = Armillaria territory, keep confirming. Rusty-brown = Galerina-possible, stop."
+  },
+  {
+    "common_find": "Wild psilocybin mushroom",
+    "common_find_scientific": "Psilocybe spp",
+    "dangerous_species_id": "deadly-galerina",
+    "dangerous_species_name": "Deadly Galerina (Galerina marginata, Tier A)",
+    "field_check": "Same spore print check: dark purple-brown/black vs rusty-brown. Common enough on wood chips and mulch that it deserves its own explicit mention."
+  },
+  {
+    "common_find": "Shaggy parasol / parasol mushroom",
+    "common_find_scientific": "Macrolepiota spp",
+    "dangerous_species_id": "green-spored-parasol",
+    "dangerous_species_name": "Green-Spored Parasol (Chlorophyllum molybdites, Tier B)",
+    "field_check": "Spore print: white = parasol group. Green/gray-green = C. molybdites."
+  },
+  {
+    "common_find": "Meadow/horse mushroom",
+    "common_find_scientific": "Agaricus spp",
+    "dangerous_species_id": "western-destroying-angel",
+    "dangerous_species_name": "Destroying Angel (Amanita ocreata, Tier A) or Death Cap (A. phalloides)",
+    "field_check": "Gill color at maturity: pink-to-chocolate-brown = Agaricus. White at any stage = Amanita, stop, check for a volva."
+  },
+  {
+    "common_find": "Any unopened white egg",
+    "common_find_scientific": "",
+    "dangerous_species_id": "death-cap",
+    "dangerous_species_name": "Death Cap or Destroying Angel button stage (Tier A)",
+    "field_check": "Cut top to bottom. Uniform solid white flesh with no internal cap/gill outline visible = consistent with puffball. Any internal mushroom-shaped structure visible in cross-section = Amanita button, stop."
+  },
+  {
+    "common_find": "Puffball",
+    "common_find_scientific": "Calvatia, Lycoperdon spp",
+    "dangerous_species_id": "death-cap",
+    "dangerous_species_name": "Amanita button stage (Tier A)",
+    "field_check": "Same cut test as above -- the single most important habitual check for anyone who eats puffballs."
+  },
+  {
+    "common_find": "Any small brown mushroom (LBM) foraged for psilocybin, curiosity, or practice ID",
+    "common_find_scientific": "",
+    "dangerous_species_id": "deadly-galerina",
+    "dangerous_species_name": "Deadly Galerina, Fool's Conecap, small Lepiotas (all Tier A)",
+    "field_check": "There is no fast field check that covers the whole LBM category -- that's the point. See the general LBM caution in SKILL.md."
+  }
+]
