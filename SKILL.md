@@ -637,8 +637,15 @@ of them has killed someone who trusted it.
   reaches GitHub. Species corrections to `references/*.json` are NOT
   pushable this way, on purpose -- that stays a manual, human-reviewed
   commit given what's at stake if that data were ever wrong.
-- Species list is a deliberately scoped v1 (life-safety species
-  exhaustive for the region; common finds at ~44 species total, not an
-  exhaustive regional flora). Flag any species to add or correct in the
-  repo directly -- this is meant to grow, and now it actually can without
-  regenerating this whole file.
+- Species list is a deliberately scoped v1, expanded once already (44 ->
+  51 species, September 2026) and meant to keep growing (life-safety
+  species exhaustive for the region; common finds at 51 species total as
+  of the last expansion, still not an exhaustive regional flora). Flag any
+  species to add or correct in the repo directly -- this is meant to
+  grow, and now it actually can without regenerating this whole file.
+- Reference photos now come from two independent sources -- iNaturalist
+  directly, and Mushroom Observer's collection reached through GBIF (see
+  `scripts/fetch_photo_refs.py`'s docstring and `README.md` for why GBIF
+  rather than Mushroom Observer's own API). Photos and citations both got
+  a strengthening pass alongside the species-count expansion above --
+  neither is exhaustive, both are fine places to keep extending.

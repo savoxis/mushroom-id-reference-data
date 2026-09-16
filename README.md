@@ -27,8 +27,8 @@ JSON file, not a skill re-proposal.
 
 ```
 references/
-  species_registry.json    44 species, tiers A/B/C, full identifying detail
-  lookalike_pairs.json     10 dangerous-lookalike pairs with the field test
+  species_registry.json    51 species, tiers A/B/C, full identifying detail
+  lookalike_pairs.json     12 dangerous-lookalike pairs with the field test
                             that tells them apart
   toxin_syndromes.json     10 toxin syndrome profiles (onset, mechanism,
                             treatment window)
@@ -45,9 +45,12 @@ scripts/
   fetch_reference_data.py  pulls the four references/*.json files down at
                             runtime, with a 24h cache and fail-safe fallback
   fetch_photo_refs.py      the tool that built photos_manifest.json against
-                            the iNaturalist API - rerun this to refresh or
-                            extend photo coverage, not by hand-editing the
-                            manifest
+                            two independent sources -- iNaturalist directly,
+                            and Mushroom Observer's collection by way of
+                            GBIF (see the script's own docstring for why
+                            GBIF and not Mushroom Observer's API directly)
+                            - rerun this to refresh or extend photo
+                            coverage, not by hand-editing the manifest
   log_find.py              appends one entry to logs/finds_log.jsonl for
                             each ID the skill runs (always local disk),
                             and optionally pushes that entry straight to
@@ -97,32 +100,51 @@ on disk instead of deleting good data over a network hiccup.
 
 ## Species database coverage
 
-- 44 species total: 9 Tier A (deadly, hard warning triggers), 7 Tier B
-  (serious toxicity), 28 Tier C (edible or mild-risk, informational)
-- 10 dangerous-lookalike pairs, each with a specific field-checkable
+- 51 species total: 9 Tier A (deadly, hard warning triggers), 11 Tier B
+  (serious toxicity, including one -- Verpa bohemica -- whose safety is
+  genuinely disputed rather than confirmed either way), 31 Tier C (edible
+  or mild-risk, informational)
+- 12 dangerous-lookalike pairs, each with a specific field-checkable
   distinguishing test - never "trust your gut," always a concrete
   physical check
-- 10 toxin syndrome profiles backing the Tier A/B entries
+- 10 toxin syndrome profiles backing the Tier A/B entries (Verpa bohemica's
+  disputed status deliberately isn't forced into a confirmed-toxin row --
+  see its entry in `species_registry.json`)
 
 ## Photo reference coverage
 
-`photos_manifest.json` was built against iNaturalist's public API, filtered
-to `quality_grade=research` (community-vetted species ID - the right bar
-for something people are using to decide what to eat) and to open licenses
-only (cc0, cc-by, cc-by-sa, cc-by-nc, cc-by-nc-sa). Only the photo URL,
-license, attribution, and observation link are stored - nothing is
-downloaded and rehosted, so there's no copyright exposure and the
-attribution trail back to the original observer stays intact.
+`photos_manifest.json` is built against two independent sources, both
+queried by `fetch_photo_refs.py`:
 
-Current coverage: 43 of 44 species have at least one photo (127 photos
-total). The one gap is Blewit (Clitocybe nuda) - tried both the current
-name and the older synonym Lepista nuda, neither turned up an
-open-licensed research-grade photo on iNaturalist. Blewit is Tier C, not a
-safety-critical species, so this is logged here as an honest gap rather
-than worked around with a lower-quality source. If you run across a good
-open-licensed Blewit photo, add it to `photos_manifest.json` by hand or
-rerun `fetch_photo_refs.py "Clitocybe nuda"` once iNaturalist has more
-research-grade observations for it.
+- **iNaturalist**, filtered to `quality_grade=research` (community-vetted
+  species ID - the right bar for something people are using to decide what
+  to eat)
+- **Mushroom Observer**, reached indirectly through GBIF rather than MO's
+  own API - `mushroomobserver.org` itself is not reachable from this
+  project's usual build environment (verified live: every connection gets
+  reset at the TLS handshake, while every other host this project uses
+  connects fine), but MO publishes its collection to GBIF, and GBIF is
+  reachable. Same underlying photos and licenses, just fetched through a
+  mirror. See the script's own docstring for the full reasoning, in case
+  MO's API becomes directly reachable from wherever this is run later.
+
+Both sources are filtered to open licenses only (cc0, cc-by, cc-by-sa,
+cc-by-nc, cc-by-nc-sa). Only the photo URL, license, attribution, and
+observation link are stored - nothing is downloaded and rehosted, so
+there's no copyright exposure and the attribution trail back to the
+original observer stays intact. iNaturalist is queried first for each
+species; Mushroom Observer tops up any remaining slots up to 3 photos per
+species, not because one source is more trustworthy than the other, but
+because iNaturalist's quality_grade filter is a stronger single-query
+signal and MO/GBIF has no directly equivalent flag exposed through this
+query path.
+
+Current coverage: 51 of 51 species have at least one photo (153 photos
+total: 150 from iNaturalist, 3 from Mushroom Observer). The earlier gap --
+Blewit (Clitocybe nuda) had no open-licensed research-grade photo on
+iNaturalist under either its current name or the older synonym Lepista
+nuda -- is now filled by Mushroom Observer, which is exactly the kind of
+gap a second independent source exists to catch.
 
 To refresh or extend photo coverage generally:
 
@@ -163,7 +185,22 @@ python3 scripts/fetch_photo_refs.py "Amanita phalloides"   # single species test
   database on its own" is not a capability this project wants, even with
   a relay in place - the relay's whole design intentionally has no route
   for it.
-- **Blewit has no photo** - see above.
+- **Mushroom Observer's own site/API is unreachable from this project's
+  usual build environment.** `fetch_photo_refs.py` works around this by
+  querying MO's collection through GBIF instead (see that script's
+  docstring, and the photo coverage section above) - functionally the same
+  photos and licenses, just through a reachable mirror. If MO's API
+  becomes directly reachable from wherever this is run, querying it
+  directly instead would be a reasonable simplification, not a required
+  one.
+- **The photo-source and citation expansion (Sept 2026) was scoped, not
+  exhaustive.** Species count went from 44 to 51 and several thin
+  citations got stronger sourcing, but this was a bounded pass -- more
+  PNW species exist that aren't in here yet (this was never meant to be a
+  complete regional flora -- see the scoping note in SKILL.md's "Notes for
+  deployment" section), and MO/GBIF is currently used only as a
+  photo-gap-filler, not queried as thoroughly as iNaturalist for every
+  species. Both are fine places to keep extending from.
 
 ## Editing the database by hand
 

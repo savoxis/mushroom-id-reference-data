@@ -68,5 +68,19 @@
     "dangerous_species_id": "deadly-galerina",
     "dangerous_species_name": "Deadly Galerina, Fool's Conecap, small Lepiotas (all Tier A)",
     "field_check": "There is no fast field check that covers the whole LBM category -- that's the point. See the general LBM caution in SKILL.md."
+  },
+  {
+    "common_find": "True morel",
+    "common_find_scientific": "Morchella spp",
+    "dangerous_species_id": "early-false-morel",
+    "dangerous_species_name": "Early False Morel / Wrinkled Thimble Morel (Verpa bohemica, Tier B, disputed safety)",
+    "field_check": "Check cap attachment: fused to the stem most of the way down = true morel. Attached only at the very top with the margin hanging free = Verpa. Cross-section confirms: one continuous hollow chamber = morel, cottony pith-filled stem = Verpa. Verpa also fruits 2-4 weeks earlier than true morels at the same site."
+  },
+  {
+    "common_find": "Honey mushroom",
+    "common_find_scientific": "Armillaria spp",
+    "dangerous_species_id": "sulfur-tuft",
+    "dangerous_species_name": "Sulfur Tuft (Hypholoma fasciculare, Tier B)",
+    "field_check": "Spore print: white = Armillaria territory. Dark purple-black = sulfur tuft. Gill color at maturity is a second tell (white on Armillaria vs yellow-green/purple-grey on sulfur tuft). Rule out Deadly Galerina by spore print first (rusty-brown) before using taste as a tiebreaker."
   }
 ]

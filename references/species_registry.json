@@ -107,6 +107,10 @@
       {
         "title": "NAMA Mushroom Poisoning Syndromes",
         "url": "https://namyco.org/interests/toxicology/mushroom-poisoning-syndromes/"
+      },
+      {
+        "title": "Amatoxin-Containing Mushroom Poisonings: Species, Toxidromes, Treatments, and Outcomes - Diaz, Wilderness & Environmental Medicine 2018",
+        "url": "https://journals.sagepub.com/doi/10.1016/j.wem.2017.10.002"
       }
     ],
     "inat_taxon_name": "Lepiota subincarnata"
@@ -134,6 +138,10 @@
       {
         "title": "NAMA Mushroom Poisoning Syndromes",
         "url": "https://namyco.org/interests/toxicology/mushroom-poisoning-syndromes/"
+      },
+      {
+        "title": "Amatoxin-Containing Mushroom Poisonings: Species, Toxidromes, Treatments, and Outcomes - Diaz, Wilderness & Environmental Medicine 2018",
+        "url": "https://journals.sagepub.com/doi/10.1016/j.wem.2017.10.002"
       }
     ],
     "inat_taxon_name": "Pholiotina rugosa"
@@ -149,7 +157,7 @@
     "key_features": "Cap tawny-orange to reddish-brown, conical to bell-shaped; rusty-brown spore print; a cobweb-like partial veil (the cortina the genus is named for) instead of a true ring -- often only visible on young specimens.",
     "habitat_substrate": "Ground, conifer forest, mycorrhizal.",
     "season_west_coast": "Late summer through fall.",
-    "range_notes": "The genus Cortinarius is large and well-represented in West Coast conifer forests; confirmed North American fatalities from this specific species are less densely documented than the European case literature, which is much larger. That is a documentation gap, not a safety signal.",
+    "range_notes": "The genus Cortinarius is large and well-represented in West Coast conifer forests. Confirmed North American orellanine poisoning cases are rare in the literature -- a 2020 Quebec case (only the second confirmed orellanine poisoning documented in North America at the time) caused acute kidney failure requiring hospitalization after an 18-day delayed onset, with incomplete kidney recovery at last follow-up. Rarity of documented cases reflects how few North American poisonings get correctly traced back to a Cortinarius meal given the multi-week delay, not evidence the risk is lower here than in Europe, where the case literature is much larger.",
     "confused_with": "Novices sometimes lump orange mushroom in the woods together with chanterelles or edible boletes without checking gill structure (this genus has true attached gills, unlike a chanterelle's false ridges) or spore print color.",
     "cannot_determine_from_photo": "Spore print, and functionally nothing else matters once Cortinarius is even plausible.",
     "distinguishing_test": "None suitable for field use by a non-expert. Any Cortinarius-type mushroom (cobwebby veil remnant, rusty spore print, orange/brown/purple coloring, ground-growing near conifers) is a hard no for consumption, always.",
@@ -161,6 +169,10 @@
       {
         "title": "Cortinarius rubellus - First Nature",
         "url": "https://www.first-nature.com/fungi/cortinarius-rubellus.php"
+      },
+      {
+        "title": "A Rare Cortinarius rubellus Poisoning in North America - NAMA",
+        "url": "https://namyco.org/wp-content/uploads/2023/08/A_Cortinarius_rubellus_Poisoning_in_Canada-2-1.pdf"
       }
     ],
     "inat_taxon_name": "Cortinarius rubellus"
@@ -257,6 +269,118 @@
       }
     ],
     "inat_taxon_name": "Amanita smithiana"
+  },
+  {
+    "id": "sulfur-tuft",
+    "common_name": "Sulfur Tuft",
+    "scientific_name": "Hypholoma fasciculare",
+    "tier": "B",
+    "severity": "severe",
+    "toxin_syndrome": "GI irritant",
+    "effect": "Severe gastrointestinal distress -- nausea, vomiting, diarrhea, and sensory disturbances, roughly 5-10 hr after eating in most reports (large doses can come on faster). The mushroom's own intensely bitter taste is a built-in warning most people won't ignore once they chew a piece, but bitterness can't be confirmed from a photo alone.",
+    "key_features": "Cap 1-6 cm, light yellow to yellow-brown, darkening with age; gills yellow with a green cast when young, dark grey-purple at maturity; dark purple-black spore print; grows in dense clusters on dead wood.",
+    "habitat_substrate": "Wood -- stumps, logs, buried roots, both conifer and hardwood; saprotrophic, and very often the exact same substrate as honey mushroom.",
+    "season_west_coast": "Active across the fall mushroom season, into winter in mild spells -- overlapping honey mushroom's window.",
+    "range_notes": "Widespread and common across the West Coast wherever there is dead wood to grow on.",
+    "confused_with": "Honey mushroom (Armillaria spp, Tier C below) by foragers going on \"clustered mushroom on wood\" alone. Gill color at maturity (yellow-green to purple-grey here vs white on Armillaria) and spore print (dark purple-black here vs white) separate them cleanly. Taste is also a fast, safe field check for this specific pairing -- but never substitute taste for a spore print when Deadly Galerina (Tier A) is also plausible on the same wood.",
+    "cannot_determine_from_photo": "Gill color at full maturity, spore print color, bitterness.",
+    "distinguishing_test": "Spore print first. Dark purple-black = consistent with sulfur tuft, not Galerina (rusty-brown) or Armillaria (white). Once Galerina is ruled out by spore print, a cautious taste test (tiny piece, chew briefly, spit out, rinse) can confirm: intensely, unmistakably bitter = sulfur tuft; mild = Armillaria territory, keep confirming.",
+    "citations": [
+      {
+        "title": "Hypholoma fasciculare - Mushrooms Up! (Beaty Museum, UBC)",
+        "url": "https://explore.beatymuseum.ubc.ca/mushroomsup/H_fasciculare.html"
+      },
+      {
+        "title": "NAMA Mushroom Poisoning Syndromes",
+        "url": "https://namyco.org/interests/toxicology/mushroom-poisoning-syndromes/"
+      }
+    ],
+    "inat_taxon_name": "Hypholoma fasciculare"
+  },
+  {
+    "id": "the-sickener",
+    "common_name": "The Sickener",
+    "scientific_name": "Russula emetica group (including R. silvicola)",
+    "tier": "B",
+    "severity": "severe",
+    "toxin_syndrome": "GI irritant",
+    "effect": "Vomiting, nausea, diarrhea, and colicky cramps, typically 30 min - 3 hr after eating; self-limited, resolving once it passes through the system. The species name is literal.",
+    "key_features": "Cap 4-10 cm, red to pink (sometimes fading to cream with yellow blotching), convex becoming flat with a central depression, grooved margin, peelable cuticle; gills white, crowded, adnate; stem white, brittle, stuffed rather than hollow. Flesh overall is very brittle -- it snaps rather than bends. Tastes sharply peppery-hot when chewed.",
+    "habitat_substrate": "Ground, ectomycorrhizal, conifer forest -- mossy ground generally, not the bog-only habitat older field guides sometimes suggest.",
+    "season_west_coast": "Summer through fall.",
+    "range_notes": "What gets called \"Russula emetica\" on the West Coast is usually the regional look-alike R. silvicola rather than the more circumboreal, bog-associated R. emetica sensu stricto -- treat any hot-tasting red Russula in West Coast conifer woods as this group rather than trying to pin the exact species from a photo.",
+    "confused_with": "Edible red-capped Russula species, several of which are genuinely choice. Taste is the fast, safe separator here specifically because the genus Russula carries no amatoxin or orellanine risk once you've confirmed it's actually a Russula (gills, not pores or teeth; brittle flesh that snaps) -- a small taste-and-spit is a legitimate field test for this genus in a way it is never appropriate for an Amanita or Cortinarius.",
+    "cannot_determine_from_photo": "Taste, which is the primary field separator within this genus.",
+    "distinguishing_test": "Taste a tiny piece of raw flesh, chew a few seconds, spit out, rinse the mouth. Sharp, burning, peppery = Sickener group, do not eat. Mild or nutty = a different Russula, still confirm color and spore print before eating.",
+    "citations": [
+      {
+        "title": "Russula emetica - Mushrooms Up! (Beaty Museum, UBC)",
+        "url": "https://explore.beatymuseum.ubc.ca/mushroomsup/R_emetica.html"
+      },
+      {
+        "title": "Russula silvicola - MykoWeb California Fungi",
+        "url": "https://www.mykoweb.com/CAF/species/Russula_silvicola.html"
+      }
+    ],
+    "inat_taxon_name": "Russula silvicola"
+  },
+  {
+    "id": "woolly-milkcap",
+    "common_name": "Woolly Milkcap",
+    "scientific_name": "Lactarius torminosus",
+    "tier": "B",
+    "severity": "severe",
+    "toxin_syndrome": "GI irritant",
+    "effect": "Gastrointestinal upset if eaten raw or undercooked -- the species name (torminosus, \"causing colic\") is a direct description. Some traditions pickle and salt this species before eating to neutralize the irritant; that is a food-preparation technique with real failure modes, not a safety guarantee, and this skill does not endorse relying on it for an ID made from a photo.",
+    "key_features": "Cap 5-15 cm, buff-pink with a distinctly woolly, shaggy, inrolled margin and faint concentric zoning; gills shortly decurrent, crowded, pale pink, exuding white to pale cream latex when cut; stem paler than the cap, becoming hollow with age.",
+    "habitat_substrate": "Ground, mycorrhizal specifically with birch -- the birch association is a useful habitat check on its own.",
+    "season_west_coast": "Late summer through fall.",
+    "range_notes": "Well documented in Europe; North American populations including the West Coast are reported but less densely studied -- treat the toxicity caution as solid and the exact regional frequency as less certain.",
+    "confused_with": "Other pink-to-orange latex-exuding Lactarius species, some of which are considered edible. The woolly, shaggy, inrolled cap margin is the fastest visual separator from smoother-margined Lactarius look-alikes.",
+    "cannot_determine_from_photo": "Latex color and taste if not reported; birch association if habitat context is missing.",
+    "distinguishing_test": "Cap margin texture (woolly/shaggy = this species) plus confirmed birch habitat. As with any milk-cap genus member, do not rely on visual ID alone -- latex color, taste, and staining reaction all matter and none are safely guessable from a photo.",
+    "citations": [
+      {
+        "title": "Lactarius torminosus, Woolly Milkcap - First Nature",
+        "url": "https://www.first-nature.com/fungi/lactarius-torminosus.php"
+      },
+      {
+        "title": "NAMA Mushroom Poisoning Syndromes",
+        "url": "https://namyco.org/interests/toxicology/mushroom-poisoning-syndromes/"
+      }
+    ],
+    "inat_taxon_name": "Lactarius torminosus"
+  },
+  {
+    "id": "early-false-morel",
+    "common_name": "Early False Morel / Wrinkled Thimble Morel",
+    "scientific_name": "Verpa bohemica",
+    "tier": "B",
+    "severity": "disputed",
+    "toxin_syndrome": "disputed / uncertain",
+    "effect": "Safety is genuinely disputed, not settled science. Unlike Gyromitra (Tier A above), Verpa bohemica has not been confirmed to contain gyromitrin, and some regions (parts of northern Italy) have a tradition of eating it. North American mycological sources still routinely flag it as suspect, with scattered reports of GI upset and, less consistently, transient loss of coordination after eating it -- most often associated with repeated meals over several days rather than a single serving. Given the real uncertainty here, plus the confusion risk with true morels below, this skill treats it as a caution-flag species rather than a confirmed edible or a confirmed poison -- don't state a verdict either way, say plainly that it's disputed.",
+    "key_features": "Cap wrinkled/brain-like, thimble-shaped, and attached to the stem ONLY at the very top -- the free-hanging skirt-like margin is the single most distinctive feature and the fastest way to separate it from a true morel. Stem filled with cottony pith, not hollow; pale ocher to buff, often with fine whitish granules or chevrons on the surface.",
+    "habitat_substrate": "Ground, with a classic association with black cottonwood (Populus trichocarpa) riparian zones -- leaf litter and duff along rivers and streams.",
+    "season_west_coast": "The earliest of the spring morel-type fruitings, typically 2-4 weeks ahead of true morels at the same site -- useful as a seasonal indicator for morel hunters, not as a reason to assume it's safe to eat.",
+    "range_notes": "Found across Cascadia, more frequently reported in inland valleys and east-side river systems than immediately coastal areas.",
+    "confused_with": "True morels (Morchella spp, Tier C below) by anyone keying on general size and color rather than checking the cap's attachment point and doing a cross-section -- this pairing is the entire reason this species is in the database.",
+    "cannot_determine_from_photo": "Cap-to-stem attachment is sometimes visible in a good photo, but the stem interior (cottony vs. hollow) needs a cross-section to confirm.",
+    "distinguishing_test": "Check where the cap attaches to the stem. Only at the very top, with the margin hanging free = Verpa bohemica. Attached most of the way down, fused to the stem = true morel. A cross-section confirms it: cottony pith-filled stem = Verpa; one continuous hollow chamber from cap tip to stem base = true morel.",
+    "citations": [
+      {
+        "title": "Toxicity of PNW Morels and False Morels - Salish Mushrooms",
+        "url": "https://salishmushrooms.com/toxicity-of-pnw-morels-and-false-morels/"
+      },
+      {
+        "title": "Verpa bohemica: Wrinkled Thimble Morel - Salish Mushrooms",
+        "url": "https://salishmushrooms.com/mushrooms/verpa-bohemica/"
+      },
+      {
+        "title": "Warning on False or True Morels and Button Mushrooms with Potential Toxicity Linked to Hydrazinic Toxins: An Update - MDPI Toxins",
+        "url": "https://www.mdpi.com/2072-6651/12/8/482"
+      }
+    ],
+    "inat_taxon_name": "Verpa bohemica"
   },
   {
     "id": "green-spored-parasol",
@@ -438,6 +562,86 @@
       }
     ],
     "inat_taxon_name": "Paxillus involutus"
+  },
+  {
+    "id": "wine-cap",
+    "common_name": "Wine Cap / King Stropharia",
+    "scientific_name": "Stropharia rugosoannulata",
+    "tier": "C",
+    "severity": "common",
+    "toxin_syndrome": null,
+    "effect": null,
+    "key_features": "Large red-burgundy to maroon cap fading paler with age; gills dark purple-grey at maturity; purple-black spore print; a thick, wavy, membranous ring on a white stem.",
+    "habitat_substrate": "Wood-chip mulch beds, landscaped and gardened areas -- a genuinely urban/garden find as often as a woodland one; saprotrophic.",
+    "season_west_coast": "Summer through fall, especially in irrigated or mulched beds.",
+    "range_notes": "",
+    "confused_with": null,
+    "cannot_determine_from_photo": null,
+    "distinguishing_test": null,
+    "watch_for": "No well-established dangerous look-alike once cap color, gill color, and the substantial ring are all confirmed together -- but confirm all three, not just the cap. Check for small holes indicating fly larvae, which spoil a specimen fast (a quality issue, not a safety one). As with any new-to-you species, try a small amount the first time given occasional individual sensitivity.",
+    "citations": [
+      {
+        "title": "Stropharia rugosoannulata - Midwest American Mycological Information",
+        "url": "https://midwestmycology.org/stropharia-rugoso-annulata/"
+      },
+      {
+        "title": "Stropharia rugosoannulata - MushroomExpert.Com",
+        "url": "https://www.mushroomexpert.com/stropharia_rugosoannulata.html"
+      }
+    ],
+    "inat_taxon_name": "Stropharia rugosoannulata"
+  },
+  {
+    "id": "admirable-bolete",
+    "common_name": "Admirable Bolete",
+    "scientific_name": "Aureoboletus mirabilis (older references: Boletus mirabilis)",
+    "tier": "C",
+    "severity": "common",
+    "toxin_syndrome": null,
+    "effect": null,
+    "key_features": "Dark reddish-brown to maroon-brown cap with a rough, velvety texture; stem club-shaped with a swollen base, dark brown with paler streaks; pores pale yellow when young, darkening to dingy olive-yellow with age.",
+    "habitat_substrate": "Unusual for a bolete: grows from well-decayed, moss-covered wood (hemlock logs and stumps) rather than open ground, though it can look terrestrial when the wood is buried.",
+    "season_west_coast": "Fall, peaking in October, with the first flush roughly 2-3 weeks after significant fall rains.",
+    "range_notes": "Common throughout western Washington, Oregon, and coastal BC in mossy, mature hemlock-associated forest, sea level to about 4,000 ft.",
+    "confused_with": null,
+    "cannot_determine_from_photo": null,
+    "distinguishing_test": null,
+    "watch_for": "General bolete caution still applies regardless of species-level confidence: avoid anything with red/orange pores that bruise blue (see the caution under fall king bolete for the toxic Boletus/Suillellus group this rules out). This species does not match that pattern, but confirm pore color and bruising before eating any bolete. Its wood-growing habit is unusual for the genus -- don't treat \"grows from soil\" as a given bolete identifier here.",
+    "citations": [
+      {
+        "title": "Admirable Bolete - Salish Mushrooms",
+        "url": "https://salishmushrooms.com/mushrooms/admirable-bolete/"
+      },
+      {
+        "title": "Admirable Bolete - Kitsap Peninsula Mycological Society",
+        "url": "https://kitsapmushrooms.org/edible-mushrooms/admirable-bolete/"
+      }
+    ],
+    "inat_taxon_name": "Aureoboletus mirabilis"
+  },
+  {
+    "id": "hawks-wing",
+    "common_name": "Hawk's Wing",
+    "scientific_name": "Sarcodon imbricatus",
+    "tier": "C",
+    "severity": "common",
+    "toxin_syndrome": null,
+    "effect": null,
+    "key_features": "Tooth fungus -- spines, not gills or pores, on the underside; brown scaly/shingled cap, brown spore print, a strong distinctive mushroomy smell.",
+    "habitat_substrate": "Ground, ectomycorrhizal with conifers, often at higher elevation.",
+    "season_west_coast": "Fall.",
+    "range_notes": "West Coast material is commonly called by this name in regional field guides, though there is some question in the mycological literature about whether North American populations are genuinely the same species as European Sarcodon imbricatus or a distinct, less formally described West Coast lineage -- treat the species-level name here as regionally conventional rather than fully settled.",
+    "confused_with": null,
+    "cannot_determine_from_photo": null,
+    "distinguishing_test": null,
+    "watch_for": "Flavor and edibility both decline with age and size -- pick young specimens. A related species (Sarcodon scabrosus) is more strongly bitter and some people react poorly to it; taste a tiny raw piece and spit it out before committing a whole harvest -- pronounced bitterness is a reason to skip that batch, not something to cook through.",
+    "citations": [
+      {
+        "title": "Sarcodon imbricatus - MykoWeb California Fungi",
+        "url": "https://www.mykoweb.com/CAF/species/Sarcodon_imbricatus.html"
+      }
+    ],
+    "inat_taxon_name": "Sarcodon imbricatus"
   },
   {
     "id": "pacific-golden-chanterelle",
