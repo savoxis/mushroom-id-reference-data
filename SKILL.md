@@ -18,37 +18,959 @@ Example queries this skill handles:
 - "Are these safe? Found them in my backyard in Portland"
 - "Matsutake or something else?" + photo, taken near Sisters OR
 
-This skill's actual database, scripts, and finds log live in a companion
-GitHub repo, not in this file -- see "Setup" below before doing anything
-else. That split exists because the platform this skill is saved through
-only supports a single file, so instead of forcing forty-plus species'
-worth of data and code inline (the first draft did exactly that, and it
-was a mistake -- see "Notes for deployment" at the bottom), the real
-content lives in a normal, versioned, directly-editable repo, and this
-file is the orchestration layer that knows how to reach it.
+This skill's five workflow scripts are written out below, verbatim, as
+part of this file -- not fetched from anywhere. Only the species database
+(JSON, no executable content) lives in a companion GitHub repo; see
+"Setup" below before doing anything else. Splitting out the JSON, and
+only the JSON, is deliberate: it needs to stay independently editable (a
+species correction should be a one-line git diff, not a full skill
+re-propose) and it carries nothing for a session to have to trust, since
+it's data, not code. The scripts don't share either property -- they
+change rarely, and arriving as part of reading this file rather than
+being fetched and executed sight-unseen is worth more than the
+convenience of editing them without a re-propose.
 
 ---
 
-## Setup: getting the repo content (do this first, every session)
+## Setup: writing the scripts and pulling the reference data (do this first, every session)
 
-Repo: `https://github.com/savoxis/mushroom-identifier-dontusethisever`.
-Public, read-only, no credentials anywhere in it. It holds two things:
-JSON reference data (species list, lookalike pairs, toxin syndromes,
-photo links) and a handful of short Python scripts that read/compute
-against that data (geocoding, EXIF extraction, a weather lookup, and
-local find-logging). Find logging is local-disk-only -- see step 12.
+Check whether `scripts/` already has these five files in the working
+directory, each matching what's below. If not, write each one out to
+`scripts/<name>` exactly as given -- character for character, not
+summarized or reconstructed from memory of what it does:
 
-Check whether `scripts/` and `references/` already exist in the working
-directory with content in them. If not, fetch them:
+**`scripts/geo.py`**
+```python
+#!/usr/bin/env python3
+"""
+geo.py - Geocoding, elevation, and in-scope check for the West Coast
+mushroom-id skill. Adapted from oregon-mushroom-scout's geo.py, widened
+from a single-state box to OR/WA/CA/north ID/west MT.
+
+CLI: python3 geo.py "location_string"
+Returns JSON: {lat, lon, elev_ft, matched, in_scope, ambiguous: [...], error}
+
+Scope check is two-layer, not a precise polygon:
+1. Preferred: Open-Meteo's geocoder returns an admin1 (state) name -- match
+   against the five target states directly.
+2. Idaho and Montana are only partly in scope ("north Idaho", "west
+   Montana"), so admin1== 'Idaho' additionally requires lat >= 46.0
+   (roughly the panhandle) and admin1== 'Montana' additionally requires
+   lon <= -112.5 (roughly west of the Continental Divide corridor).
+3. Fallback for raw "lat,lon" input with no admin1 available: a generous
+   rectangular bounding box. This over-includes parts of Nevada, southern
+   Idaho, and similar edge areas -- it's a coarse sanity check, not a
+   state-boundary lookup. Treat "in_scope: true" from the box path as
+   provisional and say so if it matters.
+"""
+
+import sys
+import json
+import math
+import urllib.request
+import urllib.error
+import urllib.parse
+import os
+import time
+
+CACHE_DIR = os.path.join(os.path.dirname(__file__), 'cache')
+GEOCODE_CACHE = os.path.join(CACHE_DIR, 'geocode_cache.json')
+ELEV_CACHE = os.path.join(CACHE_DIR, 'elevation_cache.json')
+
+# Coarse fallback box only -- see module docstring. Covers OR/WA/CA fully,
+# overshoots east to catch north ID / west MT, accepting some false
+# positives (NV, southern ID, etc.) as the cost of a simple rectangle.
+BBOX = {"min_lat": 32.5, "max_lat": 49.5, "min_lon": -124.8, "max_lon": -111.0}
+TARGET_STATES = {"Oregon", "Washington", "California"}
+
+
+def ensure_cache_dir():
+    if not os.path.exists(CACHE_DIR):
+        os.makedirs(CACHE_DIR)
+
+
+def read_cache(cache_file, ttl_seconds):
+    if not os.path.exists(cache_file):
+        return {}
+    try:
+        with open(cache_file) as f:
+            cache = json.load(f)
+        now = time.time()
+        return {k: v['data'] for k, v in cache.items() if now - v.get('timestamp', 0) < ttl_seconds}
+    except Exception:
+        return {}
+
+
+def write_cache(cache_file, key, data):
+    ensure_cache_dir()
+    cache = {}
+    if os.path.exists(cache_file):
+        try:
+            with open(cache_file) as f:
+                cache = json.load(f)
+        except Exception:
+            cache = {}
+    cache[key] = {'data': data, 'timestamp': time.time()}
+    try:
+        with open(cache_file, 'w') as f:
+            json.dump(cache, f)
+    except Exception:
+        pass
+
+
+def in_scope_by_admin1(admin1, lat):
+    if admin1 in TARGET_STATES:
+        return True
+    if admin1 == "Idaho" and lat is not None and lat >= 46.0:
+        return True
+    if admin1 == "Montana":
+        return None  # longitude check happens where lon is available (caller)
+    return False
+
+
+def in_scope_by_box(lat, lon):
+    return BBOX['min_lat'] <= lat <= BBOX['max_lat'] and BBOX['min_lon'] <= lon <= BBOX['max_lon']
+
+
+def parse_raw_coords(location):
+    parts = location.split(',')
+    if len(parts) != 2:
+        return None
+    try:
+        lat = float(parts[0].strip())
+        lon = float(parts[1].strip())
+        return {'lat': lat, 'lon': lon}
+    except (ValueError, AttributeError):
+        return None
+
+
+def geocode_open_meteo(location):
+    """
+    Geocode a place name. IMPORTANT: query Open-Meteo with the bare place
+    name only ("Bend", not "Bend, Oregon") -- appending a state to the
+    search string degrades the match (tested live: "Boise, Idaho" as a
+    literal search string returned an obscure northern-Idaho peak instead
+    of the actual city). Split "City, State" input ourselves and use the
+    state half only as a preference hint, not as part of the search text.
+
+    Disambiguation: Open-Meteo returns multiple same-named places with no
+    inherent relevance ranking, so results are ranked by population (a
+    real city beats a same-named glacier, dam, or hamlet) and by whether
+    the feature_code marks a populated place (starts with "P"). Verified
+    against live data: a bare "Boise" query correctly returns Boise, Idaho
+    (pop 235684) first, and a bare "Bend" query correctly returns Bend,
+    Oregon (pop 87014) first.
+    """
+    cache = read_cache(GEOCODE_CACHE, 86400 * 30)
+    if location in cache:
+        return cache[location]
+
+    if ',' in location:
+        search_term, _, state_hint = location.partition(',')
+        search_term, state_hint = search_term.strip(), state_hint.strip()
+    else:
+        search_term, state_hint = location.strip(), None
+
+    url = (f"https://geocoding-api.open-meteo.com/v1/search"
+           f"?name={urllib.parse.quote(search_term)}&count=10&language=en&format=json&countryCode=US")
+
+    data = None
+    for attempt in range(2):
+        try:
+            req = urllib.request.Request(url, headers={'User-Agent': 'westcoast-mushroom-id'})
+            with urllib.request.urlopen(req, timeout=15) as response:
+                data = json.loads(response.read().decode())
+                break
+        except (urllib.error.URLError, urllib.error.HTTPError, Exception) as e:
+            if attempt == 0:
+                time.sleep(1)
+            else:
+                return {'error': f'geocoding unavailable: {str(e)}'}
+
+    if not data or 'results' not in data or not data['results']:
+        return {'error': 'location not found'}
+
+    results = data['results']
+
+    # A state hint narrows the pool but never discards it entirely --
+    # the hint could be wrong, abbreviated, or just absent from this result set.
+    if state_hint:
+        hinted = [r for r in results if r.get('admin1', '').lower() == state_hint.lower()]
+        if hinted:
+            results = hinted
+
+    def rank_key(r):
+        is_populated_place = 1 if str(r.get('feature_code', '')).startswith('P') else 0
+        return (is_populated_place, r.get('population') or 0)
+
+    results = sorted(results, key=rank_key, reverse=True)
+
+    matches = []
+    for r in results:
+        admin1 = r.get('admin1', '')
+        lat, lon = r['latitude'], r['longitude']
+        scope = in_scope_by_admin1(admin1, lat)
+        if scope is None:  # Montana case, needs lon
+            scope = lon <= -112.5
+        matches.append({'name': r.get('name', ''), 'lat': lat, 'lon': lon, 'admin1': admin1,
+                         'in_scope': scope, 'population': r.get('population'),
+                         'feature_code': r.get('feature_code')})
+
+    top = matches[0]
+    runner_up_pop = (matches[1]['population'] or 0) if len(matches) > 1 else 0
+    confident = (len(matches) == 1) or (
+        str(top['feature_code'] or '').startswith('P') and (top['population'] or 0) > 0 and
+        (top['population'] or 0) >= 3 * runner_up_pop + 1
+    )
+
+    if confident:
+        result = {'lat': top['lat'], 'lon': top['lon'], 'matched': f"{top['name']}, {top['admin1']}",
+                   'in_scope': top['in_scope'], 'ambiguous': []}
+        write_cache(GEOCODE_CACHE, location, result)
+        return result
+    else:
+        result = {'matched': None,
+                   'ambiguous': [f"{m['name']}, {m['admin1']} (pop {m['population'] or 'unknown'})" for m in matches[:6]]}
+        write_cache(GEOCODE_CACHE, location, result)
+        return result
+
+
+def get_elevation(lat, lon):
+    cache = read_cache(ELEV_CACHE, 86400 * 365)
+    key = f"{lat:.4f},{lon:.4f}"
+    if key in cache:
+        return cache[key]
+
+    url = f"https://api.open-meteo.com/v1/elevation?latitude={lat}&longitude={lon}"
+    data = None
+    for attempt in range(2):
+        try:
+            req = urllib.request.Request(url, headers={'User-Agent': 'westcoast-mushroom-id'})
+            with urllib.request.urlopen(req, timeout=15) as response:
+                data = json.loads(response.read().decode())
+                break
+        except (urllib.error.URLError, urllib.error.HTTPError, Exception):
+            if attempt == 0:
+                time.sleep(1)
+            else:
+                return None
+
+    if not data:
+        return None
+    elev_m = data.get('elevation', [None])[0]
+    if elev_m is None:
+        return None
+    elev_ft = int(round(elev_m * 3.28084))
+    write_cache(ELEV_CACHE, key, elev_ft)
+    return elev_ft
+
+
+def haversine(lat1, lon1, lat2, lon2):
+    R = 6371.0
+    lat1_rad, lon1_rad, lat2_rad, lon2_rad = map(math.radians, [lat1, lon1, lat2, lon2])
+    dlat, dlon = lat2_rad - lat1_rad, lon2_rad - lon1_rad
+    a = math.sin(dlat / 2) ** 2 + math.cos(lat1_rad) * math.cos(lat2_rad) * math.sin(dlon / 2) ** 2
+    return R * 2 * math.asin(math.sqrt(a))
+
+
+def main():
+    if len(sys.argv) < 2:
+        print(json.dumps({'error': 'usage: geo.py location_string'}))
+        sys.exit(1)
+
+    location = sys.argv[1]
+
+    coords = parse_raw_coords(location)
+    if coords:
+        elev = get_elevation(coords['lat'], coords['lon'])
+        result = {'lat': coords['lat'], 'lon': coords['lon'], 'elev_ft': elev,
+                  'matched': 'raw_coordinates',
+                  'in_scope': in_scope_by_box(coords['lat'], coords['lon']),
+                  'in_scope_note': 'raw coordinates only checked against a coarse bounding box, not state boundaries',
+                  'ambiguous': []}
+        print(json.dumps(result))
+        sys.exit(0)
+
+    result = geocode_open_meteo(location)
+    if result.get('error') or result.get('matched') is None:
+        print(json.dumps(result))
+        sys.exit(0)
+
+    elev = get_elevation(result['lat'], result['lon'])
+    if elev:
+        result['elev_ft'] = elev
+    print(json.dumps(result))
+    sys.exit(0)
+
+
+if __name__ == '__main__':
+    main()
+```
+
+**`scripts/exif_extract.py`**
+```python
+#!/usr/bin/env python3
+"""
+exif_extract.py - Minimal stdlib-only EXIF reader for GPS + capture time.
+Reads only what this skill needs: GPS latitude/longitude and DateTimeOriginal
+(falls back to DateTime). No Pillow/exifread dependency -- parses the JPEG
+APP1/EXIF segment directly with struct.
+
+CLI: python3 exif_extract.py /path/to/photo.jpg
+Returns JSON: {lat, lon, datetime, has_gps, has_datetime, error}
+
+Scope: JPEG only (the near-universal format for camera/phone photos with
+EXIF). HEIC, PNG, and re-encoded/screenshotted images either don't carry
+EXIF the same way or strip it entirely -- this returns has_gps/has_datetime
+false rather than guessing, so the workflow falls back to asking the user.
+This is a narrow, best-effort parser for well-formed camera JPEGs, not a
+general-purpose EXIF library -- any parse failure fails safe into "ask the
+user," it never fails into a wrong answer.
+"""
+
+import sys
+import struct
+import json
+
+
+def _read_ifd(data, offset, endian):
+    """Read one IFD. Returns (entries dict of tag -> (type, count, value_bytes), next_ifd_offset)."""
+    count = struct.unpack(endian + 'H', data[offset:offset + 2])[0]
+    entries = {}
+    pos = offset + 2
+    for _ in range(count):
+        entry = data[pos:pos + 12]
+        tag, typ, cnt = struct.unpack(endian + 'HHI', entry[0:8])
+        entries[tag] = (typ, cnt, entry[8:12])
+        pos += 12
+    next_ifd_offset = struct.unpack(endian + 'I', data[pos:pos + 4])[0]
+    return entries, next_ifd_offset
+
+
+def _type_size(typ):
+    return {1: 1, 2: 1, 3: 2, 4: 4, 5: 8, 7: 1, 9: 4, 10: 8}.get(typ, 1)
+
+
+def _read_value(tiff, typ, cnt, value_bytes, endian):
+    """Resolve an IFD entry's value(s). Offsets are relative to the start of `tiff`."""
+    size = _type_size(typ) * cnt
+    if size <= 4:
+        raw = value_bytes[:size]
+    else:
+        offset = struct.unpack(endian + 'I', value_bytes)[0]
+        raw = tiff[offset: offset + size]
+
+    if typ == 2:  # ASCII, null-terminated
+        return raw.split(b'\x00', 1)[0].decode('ascii', errors='replace')
+    if typ == 5:  # RATIONAL: cnt pairs of (numerator, denominator), 4 bytes each
+        vals = []
+        for i in range(cnt):
+            num, den = struct.unpack(endian + 'II', raw[i * 8:i * 8 + 8])
+            vals.append(num / den if den else 0.0)
+        return vals
+    if typ == 3:
+        return list(struct.unpack(endian + ('H' * cnt), raw[:2 * cnt]))
+    if typ == 4:
+        return list(struct.unpack(endian + ('I' * cnt), raw[:4 * cnt]))
+    return raw
+
+
+def _dms_to_decimal(dms, ref):
+    """[deg, min, sec] + hemisphere letter -> signed decimal degrees."""
+    if not dms or len(dms) < 3:
+        return None
+    deg, minutes, sec = dms[0], dms[1], dms[2]
+    decimal = deg + minutes / 60.0 + sec / 3600.0
+    if ref in ('S', 'W'):
+        decimal = -decimal
+    return decimal
+
+
+def extract(path):
+    result = {'lat': None, 'lon': None, 'datetime': None,
+              'has_gps': False, 'has_datetime': False, 'error': None}
+    try:
+        with open(path, 'rb') as f:
+            data = f.read()
+    except Exception as e:
+        result['error'] = f'could not read file: {e}'
+        return result
+
+    if data[0:2] != b'\xff\xd8':
+        result['error'] = ('not a JPEG (no SOI marker) -- this parser only reads JPEG EXIF; '
+                            'ask the user for time/location')
+        return result
+
+    pos = 2
+    tiff = None
+    while pos < len(data) - 4:
+        if data[pos] != 0xFF:
+            pos += 1
+            continue
+        marker = data[pos + 1]
+        if marker in (0xD8, 0x01) or 0xD0 <= marker <= 0xD7:
+            pos += 2  # standalone markers, no length field
+            continue
+        if marker == 0xDA:  # start of scan -- compressed image data follows, stop looking
+            break
+        if pos + 4 > len(data):
+            break
+        seg_len = struct.unpack('>H', data[pos + 2:pos + 4])[0]
+        if marker == 0xE1 and data[pos + 4:pos + 10] == b'Exif\x00\x00':
+            tiff = data[pos + 10: pos + 2 + seg_len]
+            break
+        pos += 2 + seg_len
+
+    if tiff is None:
+        result['error'] = ('no EXIF data found in this file (screenshots, downloaded/re-saved, '
+                            'and many messaging-app photos strip it) -- ask the user for time/location')
+        return result
+
+    endian = '<' if tiff[0:2] == b'II' else '>'
+    ifd0_offset = struct.unpack(endian + 'I', tiff[4:8])[0]
+    ifd0, _ = _read_ifd(tiff, ifd0_offset, endian)
+
+    # DateTimeOriginal (0x9003) lives in the Exif SubIFD (pointer tag 0x8769).
+    # Fall back to IFD0's plain DateTime (0x0132) if that's missing.
+    if 0x8769 in ifd0:
+        exif_ifd_offset = struct.unpack(endian + 'I', ifd0[0x8769][2])[0]
+        exif_ifd, _ = _read_ifd(tiff, exif_ifd_offset, endian)
+        if 0x9003 in exif_ifd:
+            typ, cnt, vb = exif_ifd[0x9003]
+            result['datetime'] = _read_value(tiff, typ, cnt, vb, endian)
+            result['has_datetime'] = True
+    if not result['has_datetime'] and 0x0132 in ifd0:
+        typ, cnt, vb = ifd0[0x0132]
+        result['datetime'] = _read_value(tiff, typ, cnt, vb, endian)
+        result['has_datetime'] = True
+
+    # GPS IFD pointer (0x8825)
+    if 0x8825 in ifd0:
+        gps_ifd_offset = struct.unpack(endian + 'I', ifd0[0x8825][2])[0]
+        gps_ifd, _ = _read_ifd(tiff, gps_ifd_offset, endian)
+
+        lat_ref = lon_ref = None
+        lat_dms = lon_dms = None
+        if 0x0001 in gps_ifd:
+            typ, cnt, vb = gps_ifd[0x0001]
+            lat_ref = _read_value(tiff, typ, cnt, vb, endian)
+        if 0x0002 in gps_ifd:
+            typ, cnt, vb = gps_ifd[0x0002]
+            lat_dms = _read_value(tiff, typ, cnt, vb, endian)
+        if 0x0003 in gps_ifd:
+            typ, cnt, vb = gps_ifd[0x0003]
+            lon_ref = _read_value(tiff, typ, cnt, vb, endian)
+        if 0x0004 in gps_ifd:
+            typ, cnt, vb = gps_ifd[0x0004]
+            lon_dms = _read_value(tiff, typ, cnt, vb, endian)
+
+        lat = _dms_to_decimal(lat_dms, lat_ref) if lat_dms else None
+        lon = _dms_to_decimal(lon_dms, lon_ref) if lon_dms else None
+        if lat is not None and lon is not None:
+            result['lat'] = round(lat, 6)
+            result['lon'] = round(lon, 6)
+            result['has_gps'] = True
+
+    if not result['has_gps']:
+        note = 'no GPS tags found -- ask the user for a location'
+        result['error'] = f"{result['error']}; {note}" if result['error'] else note
+    if not result['has_datetime']:
+        note = 'no capture date found -- ask the user for a date'
+        result['error'] = f"{result['error']}; {note}" if result['error'] else note
+
+    return result
+
+
+def main():
+    if len(sys.argv) < 2:
+        print(json.dumps({'error': 'usage: exif_extract.py /path/to/photo.jpg'}))
+        sys.exit(1)
+    print(json.dumps(extract(sys.argv[1]), indent=2))
+
+
+if __name__ == '__main__':
+    main()
+```
+
+**`scripts/weather_at_time.py`**
+```python
+#!/usr/bin/env python3
+"""
+weather_at_time.py - Historical weather/soil conditions for a specific past
+date and location, via Open-Meteo's Archive API (no key required).
+
+This answers "were conditions plausible for something to be fruiting here
+on this date" -- a secondary, corroborating signal only. It never
+identifies a species and should never move a candidate up or down more
+than slightly in confidence. A mushroom is what its features say it is,
+regardless of the weather.
+
+CLI: python3 weather_at_time.py lat lon YYYY-MM-DD
+Returns JSON with a 30-day lookback window ending on the given date:
+soil temp (7d mean), precip (7d/14d/30d), frost nights, and the raw daily
+series in case the model wants to look closer.
+
+Verified live against archive-api.open-meteo.com on 2026-09-16: the
+archive endpoint uses soil_temperature_0_to_7cm / soil_moisture_0_to_7cm,
+which are DIFFERENT variable names from the forecast API's
+soil_temperature_6cm / soil_moisture_3_to_9cm used in oregon-mushroom-
+scout's weather.py -- these are two different Open-Meteo products (ERA5-
+Land reanalysis vs forecast model) and do not share a naming scheme. Do
+not copy variable names across the two scripts without re-checking.
+"""
+
+import sys
+import json
+import urllib.request
+import urllib.error
+import os
+import time
+from datetime import datetime, timedelta
+
+CACHE_DIR = os.path.join(os.path.dirname(__file__), 'cache')
+CACHE_FILE = os.path.join(CACHE_DIR, 'weather_history_cache.json')
+
+
+def ensure_cache_dir():
+    if not os.path.exists(CACHE_DIR):
+        os.makedirs(CACHE_DIR)
+
+
+def read_cache(key, ttl_seconds):
+    if not os.path.exists(CACHE_FILE):
+        return None
+    try:
+        with open(CACHE_FILE) as f:
+            cache = json.load(f)
+        entry = cache.get(key)
+        if entry and time.time() - entry.get('timestamp', 0) < ttl_seconds:
+            return entry['data']
+    except Exception:
+        pass
+    return None
+
+
+def write_cache(key, data):
+    ensure_cache_dir()
+    cache = {}
+    if os.path.exists(CACHE_FILE):
+        try:
+            with open(CACHE_FILE) as f:
+                cache = json.load(f)
+        except Exception:
+            cache = {}
+    cache[key] = {'data': data, 'timestamp': time.time()}
+    try:
+        with open(CACHE_FILE, 'w') as f:
+            json.dump(cache, f)
+    except Exception:
+        pass
+
+
+def fetch_archive(lat, lon, start_date, end_date):
+    cache_key = f"{lat}_{lon}_{start_date}_{end_date}"
+    # Historical dates never change once past -- cache hard. Only a window that
+    # includes "today" (photo taken today) would need a short TTL; callers
+    # asking about today should prefer the live forecast API instead.
+    cached = read_cache(cache_key, ttl_seconds=86400 * 365)
+    if cached:
+        return cached
+
+    url = (f"https://archive-api.open-meteo.com/v1/archive"
+           f"?latitude={lat}&longitude={lon}&start_date={start_date}&end_date={end_date}"
+           f"&daily=temperature_2m_max,temperature_2m_min,precipitation_sum"
+           f"&hourly=soil_temperature_0_to_7cm,soil_moisture_0_to_7cm"
+           f"&temperature_unit=fahrenheit&precipitation_unit=inch&timezone=America%2FLos_Angeles")
+
+    data = None
+    for attempt in range(2):
+        try:
+            req = urllib.request.Request(url, headers={'User-Agent': 'westcoast-mushroom-id'})
+            with urllib.request.urlopen(req, timeout=20) as response:
+                data = json.loads(response.read().decode())
+                break
+        except (urllib.error.URLError, urllib.error.HTTPError, Exception) as e:
+            if attempt == 0:
+                time.sleep(1)
+            else:
+                return {'error': f'archive fetch failed: {e}'}
+
+    write_cache(cache_key, data)
+    return data
+
+
+def daily_mean_from_hourly(hourly_times, hourly_values):
+    by_date = {}
+    for t, v in zip(hourly_times, hourly_values):
+        if v is None:
+            continue
+        date = t.split('T')[0]
+        by_date.setdefault(date, []).append(v)
+    return {d: sum(vs) / len(vs) for d, vs in by_date.items()}
+
+
+def compute_features(data, target_date):
+    if 'error' in data:
+        return {'error': data['error']}
+
+    daily = data.get('daily', {})
+    daily_times = daily.get('time', [])
+    daily_min = daily.get('temperature_2m_min', [])
+    daily_precip = daily.get('precipitation_sum', [])
+
+    hourly = data.get('hourly', {})
+    soil_temp_daily = daily_mean_from_hourly(hourly.get('time', []), hourly.get('soil_temperature_0_to_7cm', []))
+    soil_moist_daily = daily_mean_from_hourly(hourly.get('time', []), hourly.get('soil_moisture_0_to_7cm', []))
+
+    if target_date not in daily_times:
+        return {'error': f'target date {target_date} not in returned range', 'available_range':
+                [daily_times[0], daily_times[-1]] if daily_times else []}
+
+    idx = daily_times.index(target_date)
+
+    def window_sum(series_dict_or_list, is_dict, start_idx, end_idx):
+        vals = []
+        for i in range(max(0, start_idx), end_idx + 1):
+            if is_dict:
+                v = series_dict_or_list.get(daily_times[i])
+            else:
+                v = series_dict_or_list[i] if i < len(series_dict_or_list) else None
+            if v is not None:
+                vals.append(v)
+        return vals
+
+    precip_7d = sum(window_sum(daily_precip, False, idx - 6, idx))
+    precip_14d = sum(window_sum(daily_precip, False, idx - 13, idx))
+    precip_30d = sum(window_sum(daily_precip, False, idx - 29, idx))
+
+    soil_7d_vals = window_sum(soil_temp_daily, True, idx - 6, idx)
+    soil_t_7d_mean = sum(soil_7d_vals) / len(soil_7d_vals) if soil_7d_vals else None
+
+    moist_7d_vals = window_sum(soil_moist_daily, True, idx - 6, idx)
+    soil_moisture_7d_mean = sum(moist_7d_vals) / len(moist_7d_vals) if moist_7d_vals else None
+
+    frost_vals = window_sum(daily_min, False, idx - 4, idx)
+    frost_nights_last5 = sum(1 for v in frost_vals if v <= 28)
+
+    return {
+        'target_date': target_date,
+        'soil_temp_f_on_date': soil_temp_daily.get(target_date),
+        'soil_temp_f_7d_mean': round(soil_t_7d_mean, 1) if soil_t_7d_mean is not None else None,
+        'soil_moisture_7d_mean_m3m3': round(soil_moisture_7d_mean, 3) if soil_moisture_7d_mean is not None else None,
+        'precip_in_7d': round(precip_7d, 2),
+        'precip_in_14d': round(precip_14d, 2),
+        'precip_in_30d': round(precip_30d, 2),
+        'frost_nights_last5': frost_nights_last5,
+        'note': 'context only -- corroborating signal, never a species identifier',
+    }
+
+
+def main():
+    if len(sys.argv) < 4:
+        print(json.dumps({'error': 'usage: weather_at_time.py lat lon YYYY-MM-DD'}))
+        sys.exit(1)
+
+    try:
+        lat = float(sys.argv[1])
+        lon = float(sys.argv[2])
+        target_date = sys.argv[3]
+        datetime.strptime(target_date, '%Y-%m-%d')  # validate format
+    except ValueError as e:
+        print(json.dumps({'error': f'invalid arguments: {e}'}))
+        sys.exit(1)
+
+    target_dt = datetime.strptime(target_date, '%Y-%m-%d')
+    start_dt = target_dt - timedelta(days=30)
+
+    # Archive API has a short lag before "today"'s data is finalized -- if the
+    # target date is within the last ~5 days, note that the window may be
+    # incomplete rather than silently returning partial data as if solid.
+    days_ago = (datetime.utcnow() - target_dt).days
+    recency_note = None
+    if days_ago < 5:
+        recency_note = 'target date is very recent -- archive data for the last few days can be provisional/incomplete'
+
+    data = fetch_archive(lat, lon, start_dt.strftime('%Y-%m-%d'), target_date)
+    features = compute_features(data, target_date)
+    if recency_note:
+        features['recency_note'] = recency_note
+
+    print(json.dumps(features, indent=2))
+    sys.exit(0)
+
+
+if __name__ == '__main__':
+    main()
+```
+
+**`scripts/fetch_reference_data.py`**
+```python
+#!/usr/bin/env python3
+"""
+fetch_reference_data.py - Pulls the species database (species_registry.json,
+lookalike_pairs.json, toxin_syndromes.json, photos_manifest.json) from the
+repo's raw GitHub content at runtime, so SKILL.md itself can stay slim
+instead of carrying the whole database inline.
+
+Uses raw.githubusercontent.com specifically, not api.github.com -- the two
+are different domains with different access rules. Verified live on
+2026-09-16: a sandboxed Claude session that had GitHub's API blocked
+outright (a session-level "add_repo" gate) could still reach
+raw.githubusercontent.com with a plain unauthenticated GET, because it's
+just a static content CDN for public repo files, not the API. No PAT or
+auth of any kind needed to read a public repo this way. If a future
+environment blocks this domain too, that's a different, harder problem --
+this script fails safe into "use whatever's cached" rather than crashing,
+so a temporary network hiccup or an unusually strict sandbox doesn't take
+the skill down, it just means data can be stale until the next fetch works.
+
+CLI:
+  python3 fetch_reference_data.py                 -- fetch all four files,
+                                                       respecting cache TTL
+  python3 fetch_reference_data.py --force          -- ignore cache, re-fetch
+"""
+
+import sys
+import json
+import os
+import time
+import urllib.request
+import urllib.error
+
+REPO_OWNER = 'savoxis'
+REPO_NAME = 'mushroom-id-reference-data'
+REPO_BRANCH = 'main'
+
+REFS_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'references')
+CACHE_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'cache')
+CACHE_META_FILE = os.path.join(CACHE_DIR, 'reference_data_fetch_times.json')
+
+FILES = ['species_registry.json', 'lookalike_pairs.json', 'toxin_syndromes.json', 'photos_manifest.json']
+CACHE_TTL_SECONDS = 86400  # 1 day -- this is reference data that changes by hand-edited commits, not live data
+
+
+def _raw_url(filename):
+    return f"https://raw.githubusercontent.com/{REPO_OWNER}/{REPO_NAME}/{REPO_BRANCH}/references/{filename}"
+
+
+def _read_fetch_times():
+    if not os.path.exists(CACHE_META_FILE):
+        return {}
+    try:
+        with open(CACHE_META_FILE) as f:
+            return json.load(f)
+    except Exception:
+        return {}
+
+
+def _write_fetch_times(times):
+    os.makedirs(CACHE_DIR, exist_ok=True)
+    try:
+        with open(CACHE_META_FILE, 'w') as f:
+            json.dump(times, f)
+    except Exception:
+        pass
+
+
+def fetch_file(filename, force=False):
+    """Fetches one references/<filename> from the repo's raw content into
+    references/<filename> locally, respecting the cache TTL unless
+    force=True. Returns (ok: bool, detail: str). On any failure, leaves
+    whatever local copy already exists untouched rather than deleting it --
+    stale data beats no data."""
+    dest_path = os.path.join(REFS_DIR, filename)
+    fetch_times = _read_fetch_times()
+    last_fetch = fetch_times.get(filename, 0)
+
+    if not force and os.path.exists(dest_path) and (time.time() - last_fetch) < CACHE_TTL_SECONDS:
+        return True, 'cached (fresh)'
+
+    url = _raw_url(filename)
+    req = urllib.request.Request(url, headers={'User-Agent': 'westcoast-mushroom-id'})
+    data = None
+    for attempt in range(2):
+        try:
+            with urllib.request.urlopen(req, timeout=20) as response:
+                data = response.read()
+                break
+        except (urllib.error.URLError, urllib.error.HTTPError, Exception) as e:
+            if attempt == 0:
+                time.sleep(1)
+            else:
+                if os.path.exists(dest_path):
+                    return True, f'fetch failed ({e}), using existing cached copy'
+                return False, f'fetch failed ({e}) and no cached copy exists'
+
+    try:
+        json.loads(data)  # validate before overwriting a good local copy with garbage
+    except json.JSONDecodeError as e:
+        if os.path.exists(dest_path):
+            return True, f'fetched data was not valid JSON ({e}), keeping existing cached copy'
+        return False, f'fetched data was not valid JSON ({e}) and no cached copy exists'
+
+    os.makedirs(REFS_DIR, exist_ok=True)
+    with open(dest_path, 'wb') as f:
+        f.write(data)
+    fetch_times[filename] = time.time()
+    _write_fetch_times(fetch_times)
+    return True, 'fetched fresh copy'
+
+
+def main():
+    force = '--force' in sys.argv
+    results = {}
+    all_ok = True
+    for filename in FILES:
+        ok, detail = fetch_file(filename, force=force)
+        results[filename] = detail
+        all_ok = all_ok and ok
+        print(f"{filename}: {detail}")
+
+    if not all_ok:
+        print(json.dumps({'ok': False, 'results': results}))
+        sys.exit(1)
+    print(json.dumps({'ok': True, 'results': results}))
+
+
+if __name__ == '__main__':
+    main()
+```
+
+**`scripts/log_find.py`**
+```python
+#!/usr/bin/env python3
+"""
+log_find.py - Appends one entry to logs/finds_log.jsonl: a personal record
+of an ID the skill ran, for later lookback (what did I find last October,
+what did I call that thing behind the shed last year).
+
+Format is JSON Lines (one JSON object per line) rather than a single JSON
+array or one file per find, on purpose -- appending a line is a one-line
+git diff and never risks corrupting or merge-conflicting the rest of the
+log the way rewriting a big array or a single nested file can. This script
+only ever appends; it never rewrites existing lines.
+
+Local disk only. No network call, no credential of any kind, nothing that
+leaves the session this skill is running in. An earlier version of this
+script optionally pushed each entry straight to GitHub through a
+self-hosted relay service, so finds could sync across devices without the
+skill ever holding a GitHub credential directly. That push path was
+removed (September 2026) -- it was nice to have but not needed in
+practice, and it was also the source of two separate rounds of a Claude
+session correctly declining to touch either the auto-push behavior or the
+live relay credential that made it work. Local-only logging sidesteps
+both problems by not having a credential or a network call anywhere in
+this script for anything to go wrong with. If cross-device sync for finds
+comes back later, it should start from that history rather than repeat it.
+
+CLI (for manual testing -- normally called with a pre-built dict, not from
+the command line):
+  python3 log_find.py '{"photo_date": "2026-05-24", ...}'
+
+Import and call log_find(entry_dict) directly from the skill workflow.
+"""
+
+import sys
+import json
+import os
+import datetime
+
+LOGS_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'logs')
+LOG_FILE = os.path.join(LOGS_DIR, 'finds_log.jsonl')
+
+REQUIRED_FIELDS = ('photo_date', 'top_candidates')
+
+
+def build_entry(photo_date, top_candidates, location=None, hard_warning_species=None, notes=None):
+    """Constructs one log entry. top_candidates is a list of dicts, each
+    with at minimum species_id, common_name, tier, confidence_band --
+    matching what the skill already produces for the [TOP CANDIDATES]
+    section of an answer, so this should just be that list passed straight
+    through, not re-typed."""
+    return {
+        'logged_at': datetime.datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%SZ'),
+        'photo_date': photo_date,
+        'location': location,  # {'lat':.., 'lon':.., 'matched_name':.., 'in_scope':..} or None if never resolved
+        'top_candidates': top_candidates,
+        'hard_warning_triggered': bool(hard_warning_species),
+        'hard_warning_species': hard_warning_species or [],
+        'notes': notes,
+    }
+
+
+def log_find(entry):
+    """Appends entry (a dict, normally from build_entry) as one line to
+    logs/finds_log.jsonl. Creates the file and logs/ dir if needed. Returns
+    a result dict with the new total line count, or raises -- this is
+    local disk I/O only, nothing here should fail silently the way a
+    network call might."""
+    missing = [f for f in REQUIRED_FIELDS if not entry.get(f)]
+    if missing:
+        raise ValueError(f'log entry missing required field(s): {missing}')
+
+    os.makedirs(LOGS_DIR, exist_ok=True)
+    with open(LOG_FILE, 'a') as f:
+        f.write(json.dumps(entry) + '\n')
+
+    with open(LOG_FILE) as f:
+        line_count = sum(1 for _ in f)
+
+    return {
+        'ok': True,
+        'log_file': LOG_FILE,
+        'total_entries': line_count,
+    }
+
+
+def main():
+    if len(sys.argv) < 2:
+        print(json.dumps({'error': 'usage: log_find.py \'<json entry or build_entry kwargs>\''}))
+        sys.exit(1)
+    try:
+        entry = json.loads(sys.argv[1])
+    except json.JSONDecodeError as e:
+        print(json.dumps({'error': f'invalid JSON argument: {e}'}))
+        sys.exit(1)
+
+    if 'logged_at' not in entry:
+        entry = build_entry(
+            photo_date=entry.get('photo_date'),
+            top_candidates=entry.get('top_candidates', []),
+            location=entry.get('location'),
+            hard_warning_species=entry.get('hard_warning_species'),
+            notes=entry.get('notes'),
+        )
+
+    try:
+        result = log_find(entry)
+    except ValueError as e:
+        print(json.dumps({'error': str(e)}))
+        sys.exit(1)
+
+    print(json.dumps(result))
+
+
+if __name__ == '__main__':
+    main()
+```
+
+None of these five take a network dependency to exist on disk -- they came
+in with this file. `fetch_reference_data.py` and the bootstrap step below
+still make network calls at runtime (Open-Meteo, iNaturalist, GitHub's raw
+content CDN), same as always; what changed is where the *code* comes from,
+not what the code does once it's running.
+
+Then pull the reference JSON -- species list, lookalike pairs, toxin
+syndromes, photo links. This is the one thing still worth fetching from
+GitHub, and the fetch below only ever writes `.json` files, nothing
+executable:
 
 ```python
 import subprocess, os, urllib.request
 
-REPO = "savoxis/mushroom-identifier-dontusethisever"
+REPO = "savoxis/mushroom-id-reference-data"
 BRANCH = "main"
 FILES = [
-    "scripts/geo.py", "scripts/weather_at_time.py", "scripts/exif_extract.py",
-    "scripts/fetch_reference_data.py", "scripts/fetch_photo_refs.py", "scripts/log_find.py",
     "references/species_registry.json", "references/lookalike_pairs.json",
     "references/toxin_syndromes.json", "references/photos_manifest.json",
 ]
@@ -82,25 +1004,10 @@ def bootstrap(dest="."):
 print(bootstrap())
 ```
 
-If both paths fail (no network reachable at all in this environment), say
-so plainly and fall back to general mycological reasoning from the photo
+If that fails (no network reachable at all in this environment), say so
+plainly and fall back to general mycological reasoning from the photo
 without tier-specific citations -- do not silently proceed as if the
 database loaded when it didn't.
-
-**Before running any fetched `.py` file this session, read it.** Cloning
-or fetching the repo only moves files onto disk -- it doesn't run
-anything by itself. Reading `scripts/geo.py`, `scripts/exif_extract.py`,
-`scripts/weather_at_time.py`, `scripts/fetch_reference_data.py`, and
-`scripts/log_find.py` (a few hundred lines total, standard library only:
-no pip installs, no subprocess calls beyond the clone above, no
-credentials) before calling any of them turns "run code that arrived over
-the network" into "run code that arrived over the network and was read
-first," which is the actual thing that matters here, not a claim about
-the code's contents made by whoever wrote this file. Do this once, right
-after fetching, rather than trusting a description of what these scripts
-do. If reading them raises a concern the description here didn't cover,
-say so and fall back to general mycological reasoning without the
-database rather than running something unreviewed.
 
 Once present, keep the reference JSON reasonably fresh rather than
 fetching once and never again: run `scripts/fetch_reference_data.py` at
@@ -582,40 +1489,35 @@ of them has killed someone who trusted it.
   per Rule 1-3. Explain briefly why (see the opening section) rather than
   just repeating the rule; if they still push, that's fine, the answer
   doesn't change.
-- **`references/` or `scripts/` failed to load** -> say so plainly rather
-  than silently reasoning without the database. General mycological
-  knowledge can still inform an answer, but citations, tier assignments,
-  and the lookalike-pairs cross-check are unavailable and the answer
-  should say that outright.
+- **`references/` failed to load** -> say so plainly rather than silently
+  reasoning without the database. General mycological knowledge can still
+  inform an answer, but citations, tier assignments, and the
+  lookalike-pairs cross-check are unavailable and the answer should say
+  that outright. (`scripts/` doesn't have this failure mode the same way
+  -- it's written from this file directly, not fetched, so there's no
+  network step for it to fail at.)
 
 ---
 
 ## Notes for deployment
 
 - Python 3, standard library only (struct, json, urllib, math, os, time,
-  datetime, subprocess) across every script in the repo -- no pip
-  installs, matching oregon-mushroom-scout's discipline.
+  datetime, subprocess) across all five scripts -- no pip installs,
+  matching oregon-mushroom-scout's discipline. `geo.py`, `exif_extract.py`,
+  `weather_at_time.py`, `fetch_reference_data.py`, and `log_find.py` are
+  embedded directly in Setup above; only `references/*.json` comes from
+  the companion repo. (Why it's split this way -- and the two rounds of
+  history behind why the scripts moved back in rather than staying
+  fetched -- is in that repo's `README.md`, not here; this file describes
+  what the skill does now, not the road that got here.)
 - ASCII only, no smart quotes or unicode in any generated text.
 - Network calls: Open-Meteo geocoding/elevation/archive APIs (no key),
   iNaturalist's public API for photo sourcing (no key), and
-  raw.githubusercontent.com for the reference data itself (no key, no
-  auth -- verified reachable even when api.github.com is blocked by a
+  raw.githubusercontent.com for the reference JSON (no key, no auth --
+  verified reachable even when api.github.com is blocked by a
   session-level policy). Every network call uses a timeout plus one
   retry and fails toward "ask the user" or "use what's cached," never
   toward crashing the workflow.
-- Earlier version of this skill (still worth knowing about, in case
-  anything here looks unfamiliar) carried the entire species database and
-  all three scripts inline in this one file, because the platform this
-  skill is saved through only accepts a single SKILL.md with no bundled
-  files. That produced a roughly 1,700-line document that was hard to
-  review, hard to edit safely (a bad find-and-replace once orphaned a
-  whole script into the middle of an unrelated section), and impossible
-  to keep current without regenerating the whole thing. This version
-  fixes that by moving the actual content to a real, git-versioned repo
-  and keeping this file as the thin layer that knows how to reach it --
-  the same shape oregon-mushroom-scout already uses, just with the
-  references/scripts folders living in GitHub instead of bundled
-  alongside the skill.
 - Find-log entries are local-only -- there is no push-to-GitHub path and
   no credential anywhere in this skill or this repo. Species corrections
   to `references/*.json` stay a manual, human-reviewed commit, given the

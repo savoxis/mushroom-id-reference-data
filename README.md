@@ -1,27 +1,59 @@
-# mushroom-identifier-dontusethisever
+# mushroom-id-reference-data
 
 Companion data repo for the `westcoast-mushroom-id` Claude skill. The skill
-itself (SKILL.md) lives in Claude's skill system, not here - this repo holds
-everything that skill needs at runtime but shouldn't have to carry inline:
-the species database, sourced reference photos, and the lookup/logging
-scripts.
+itself (SKILL.md) lives in Claude's skill system, not here. This repo holds
+the one thing that genuinely benefits from living outside SKILL.md: the
+species database and its sourced reference photos, plus a couple of
+maintenance-only tools that a human runs by hand to build that data. It
+does not hold anything the skill executes at runtime -- see "Why this
+split exists" for why that changed, and it changed twice.
+
+Renamed from `mushroom-identifier-dontusethisever` (September 2026). That
+name was a joke when the repo was young; in practice it read as a warning
+label on the repo's own clone URL, and a fresh Claude session correctly
+balked at cloning something whose name told it not to, no matter what
+SKILL.md said around it. A repo name is not a place for a joke that every
+future session has to read cold.
 
 ## Why this split exists
 
 Claude's `propose_skills` tool only accepts a single SKILL.md file - no
-bundled folders, no separate scripts. The first version of this skill
+bundled folders, no separate script files. The first version of this skill
 crammed the entire species database (44 species, citations, lookalike
 tables) and three Python scripts into one ~1700-line markdown file. It
 worked, but it was a bad way to maintain a life-safety reference: a single
 bad find-and-replace could silently corrupt a species entry, there was no
 way to diff a change to just the toxin table, and updating one photo
-reference meant re-proposing the whole skill.
+reference meant re-proposing the whole skill. So everything -- data and
+scripts alike -- moved out to this repo, fetched at runtime over
+`raw.githubusercontent.com` or a fresh clone.
 
-This repo is the fix. SKILL.md stays slim - it's the workflow, the rules,
-the decision logic - and pulls everything else from here at runtime over
-`raw.githubusercontent.com`. Editing a species entry, fixing a bad photo
-reference, or adding a new lookalike pair is now a normal git commit to a
-JSON file, not a skill re-proposal.
+That fixed the data problem but created a different one: every session now
+had to clone a repo and run `.py` files pulled off the internet before
+looking at them, sight unseen, on nothing but this file's word that they
+were fine. Two separate Claude sessions correctly treated that as
+something to be suspicious of, once over a live credential sitting in
+SKILL.md (see the find-log history below) and again, after that was fixed,
+over the shape of the thing itself -- fetching and executing code it had
+never seen. Reassuring language in SKILL.md never fixed that, because it
+can't: a document arguing "trust me, this is fine" is exactly what an
+untrustworthy document would also say, so no amount of it changes whether
+a wary reader should believe it.
+
+The actual fix (September 2026, second pass): the five scripts the skill
+runs at runtime -- `geo.py`, `exif_extract.py`, `weather_at_time.py`,
+`fetch_reference_data.py`, `log_find.py` -- moved into SKILL.md itself,
+written out verbatim in its Setup section. A session reads them as part of
+reading the skill, the same way it reads everything else in that file, and
+never fetches-and-executes anything sight unseen. Only the species
+database stays here, as plain JSON with no executable content in it at
+all -- there's nothing in a `.json` fetch for a wary session to have to
+trust, and it keeps the actual benefit this split was for in the first
+place: editing a species entry or fixing a bad photo reference is still a
+normal git commit to a data file, not a skill re-proposal. The tradeoff is
+that a change to one of the five scripts now needs a skill re-propose
+instead of a git commit -- worth it, since those change rarely and the
+database doesn't.
 
 ## Repo layout
 
@@ -39,30 +71,29 @@ references/
                             species, sourced from iNaturalist
 
 scripts/
-  exif_extract.py          pulls GPS + capture timestamp out of an uploaded
-                            photo's EXIF data
-  geo.py                   reverse-geocodes coordinates, checks whether a
-                            find is in the skill's supported West Coast range
-  weather_at_time.py       looks up historical weather/precip for a find's
-                            location and date (fruiting conditions context)
-  fetch_reference_data.py  pulls the four references/*.json files down at
-                            runtime, with a 24h cache and fail-safe fallback
   fetch_photo_refs.py      the tool that built photos_manifest.json against
                             two independent sources -- iNaturalist directly,
                             and Mushroom Observer's collection by way of
                             GBIF (see the script's own docstring for why
                             GBIF and not Mushroom Observer's API directly)
                             - rerun this to refresh or extend photo
-                            coverage, not by hand-editing the manifest
-  log_find.py              appends one entry to logs/finds_log.jsonl for
-                            each ID the skill runs -- local disk only, no
-                            network call, no credential of any kind
-
-logs/
-  finds_log.jsonl          personal find history, one JSON object per line,
-                            created on first use. Not pre-populated - this
-                            repo ships with no find history in it.
+                            coverage, not by hand-editing the manifest.
+                            Maintenance-only: a human runs this by hand,
+                            the skill itself never fetches or executes it.
+  test_exif_extract.py     unit tests for exif_extract.py's DMS/EXIF parsing
+                            logic. Dev-only, not part of the skill's runtime
+                            path either.
 ```
+
+The five scripts the skill actually runs at runtime --
+`exif_extract.py` (EXIF GPS/timestamp), `geo.py` (geocoding and
+in-scope check), `weather_at_time.py` (historical conditions),
+`fetch_reference_data.py` (pulls the four `references/*.json` files
+below), and `log_find.py` (appends to a local find log, no network call,
+no credential) -- live embedded in SKILL.md's Setup section now, not
+here. See "Why this split exists" above for why, and `logs/` (the local
+find history) is generated wherever the skill runs, local disk only --
+it was never part of this repo's tracked content and isn't shipped here.
 
 Find logs are local-only, on purpose. An earlier version of this project
 had `log_find.py` optionally push each entry straight to this repo's
@@ -81,19 +112,22 @@ not repeat it.
 
 ## How SKILL.md uses this repo
 
-SKILL.md has a small bootstrap script embedded directly in it (this is the
-one piece of code that has to stay inline - it's what fetches everything
-else, so it can't itself depend on being fetched). At the start of a run it
-tries `git clone --depth 1` against this repo, and if that fails, falls
-back to pulling each file individually from `raw.githubusercontent.com`.
+SKILL.md has a small bootstrap script embedded directly in it that pulls
+the four `references/*.json` files down at the start of a run -- nothing
+else. It tries `git clone --depth 1` against this repo first, and if that
+fails, falls back to pulling each JSON file individually from
+`raw.githubusercontent.com`. Either path only ever writes `.json`, so
+there's no executable content anywhere in what a session fetches from
+GitHub at runtime.
 
 That fallback matters: this Cowork sandbox currently has `api.github.com`
 blocked at the session level (see "Known gaps" below), but
 `raw.githubusercontent.com` - a plain static-content CDN, different domain,
 no auth needed for a public repo - is not affected. `fetch_reference_data.py`
-uses the same raw-CDN approach with a 24-hour cache, and fails safe: if a
-fetch fails or comes back invalid, it keeps using whatever copy is already
-on disk instead of deleting good data over a network hiccup.
+(embedded in SKILL.md, see "Why this split exists" above) uses the same
+raw-CDN approach with a 24-hour cache, and fails safe: if a fetch fails or
+comes back invalid, it keeps using whatever copy is already on disk
+instead of deleting good data over a network hiccup.
 
 ## Species database coverage
 
