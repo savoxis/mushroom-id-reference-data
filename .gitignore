@@ -1,0 +1,11 @@
+# The actual relay credentials for this device. Read by the skill at
+# runtime via the device bridge -- never committed, never fetched from
+# GitHub, never part of SKILL.md's own text. See
+# .claude-relay-credentials.env.example for the template and
+# relay/README.md for the full design.
+.claude-relay-credentials.env
+
+# Local build artifacts, never meant to be committed.
+__pycache__/
+*.pyc
+scripts/cache/

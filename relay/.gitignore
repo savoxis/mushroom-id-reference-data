@@ -1,0 +1,4 @@
+# Never commit real secrets. .env.example is the template; .env (if you
+# use one instead of setting container env vars directly) holds the real
+# GITHUB_PAT and RELAY_AUTH_TOKEN and must never leave your machine.
+.env

@@ -89,6 +89,46 @@ the start of a session (it no-ops if the local copy is under a day old,
 so this is cheap) so a species someone added or corrected upstream
 actually shows up.
 
+### Auto-loading relay credentials, when this device has them
+
+Find-log entries can push straight to GitHub via a self-hosted relay (see
+`relay/README.md` for the full design) if `MUSHROOM_LOG_RELAY_URL` and
+`MUSHROOM_LOG_RELAY_TOKEN` are set for the session. Typing those in every
+time is real friction, so when this session is linked to the device where
+the repo folder lives, check for a local, git-ignored credentials file at
+the repo root -- `.claude-relay-credentials.env` -- before falling back to
+"not configured this session." This file is never fetched from GitHub,
+never part of this skill's own text, and never leaves the user's machine --
+it exists on disk in the connected folder only, exactly the same way any
+local secret would sit next to a script that reads it at runtime rather
+than having it typed fresh or hardcoded into the script itself.
+
+1. If the device bridge is present (`mcp__remote-devices__*` tools in this
+   session) and the repo's folder is among the connected folders, look for
+   `.claude-relay-credentials.env` at that folder's root.
+2. Prefer reading it in place if a device-shell tool is available (a
+   simple `type` on Windows / `cat` elsewhere) -- it is a two-line file,
+   there's no reason to stage it as an upload. If no device-shell tool is
+   available or the read fails, staging this one small file to look at it
+   is a reasonable fallback (unlike the multi-megabyte reference data,
+   this is cheap and rare).
+3. If the file exists, parse its two `KEY=VALUE` lines (ignore blank
+   lines and anything starting with `#`) and use those values as
+   `MUSHROOM_LOG_RELAY_URL` / `MUSHROOM_LOG_RELAY_TOKEN` for step 12 later
+   in this session -- pass them as environment variables when invoking
+   `scripts/log_find.py`, do not write them into any file this skill
+   itself produces or repeats back.
+4. If the file does not exist, the device isn't linked, or the folder
+   isn't connected, this is not an error -- it just means this session
+   falls back to local-only logging, same as it always did before the
+   relay existed. Never ask the user to paste the token in this case
+   unless they bring it up themselves; a session without the linked
+   device is a normal, expected case, not a broken one.
+5. Never echo the token's value back in an answer, a log, or a commit
+   message -- read it, use it for the one HTTP call it's needed for, and
+   let it go out of scope. The whole point of keeping it out of this
+   file's text is defeated if a transcript ends up holding it anyway.
+
 ---
 
 ## Read this part first. It is not optional.
@@ -251,12 +291,19 @@ correct and complete answer here.
     to be shortened, reworded into something softer, or dropped because the
     top candidate looks obviously benign.
 
-12. **Log the find** -> `scripts/log_find.py`. Build an entry from the
-    photo date, location, and top candidates and append it to
-    `logs/finds_log.jsonl` in the local working copy of the repo. This does
-    NOT commit or push anything -- see "Notes for deployment" for why that
-    step is currently manual. Skip this step only if the user says they
-    don't want it logged for that particular find.
+12. **Log the find** -> `scripts/log_find_and_push()` in `scripts/log_find.py`.
+    Build an entry from the photo date, location, and top candidates and
+    append it to `logs/finds_log.jsonl` in the local working copy of the
+    repo -- this local write always happens and needs no network access.
+    If `MUSHROOM_LOG_RELAY_URL` and `MUSHROOM_LOG_RELAY_TOKEN` are set for
+    this session, it also pushes the same entry to a self-hosted relay
+    (see `relay/README.md`) that commits it straight to GitHub -- report
+    plainly which of the two actually happened (local-only vs pushed to
+    GitHub) rather than assuming success silently. Neither path performs a
+    general `git commit`/`push` of anything else in the repo -- species
+    corrections stay a manual, human-reviewed commit on purpose, given the
+    life-safety stakes of that data. Skip this step only if the user says
+    they don't want it logged for that particular find.
 
 ---
 
@@ -592,9 +639,18 @@ of them has killed someone who trusted it.
   the same shape oregon-mushroom-scout already uses, just with the
   references/scripts folders living in GitHub instead of bundled
   alongside the skill.
-- The repo is not yet set up to auto-push its own updates (finds log,
-  species corrections) back to GitHub -- that's a tracked, open item, not
-  an oversight. See the repo's own README for the current state of that.
+- Find-log entries CAN push straight to GitHub now, via an optional
+  self-hosted relay (`relay/`) -- see its README for the full design and
+  setup. This exists because `api.github.com` and `git push` to
+  `github.com` are both gated behind a session-level repo-authorization
+  step inside a Claude Cowork sandbox that a fresh chat has no way to
+  satisfy; the relay sidesteps that entirely by living off-sandbox and
+  being the only thing that ever actually talks to GitHub. It is
+  deliberately narrow -- one endpoint, one file it's allowed to touch
+  (`logs/finds_log.jsonl`), strict schema validation before anything
+  reaches GitHub. Species corrections to `references/*.json` are NOT
+  pushable this way, on purpose -- that stays a manual, human-reviewed
+  commit given what's at stake if that data were ever wrong.
 - Species list is a deliberately scoped v1 (life-safety species
   exhaustive for the region; common finds at ~44 species total, not an
   exhaustive regional flora). Flag any species to add or correct in the

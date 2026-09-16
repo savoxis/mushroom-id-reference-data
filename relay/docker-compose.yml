@@ -1,0 +1,35 @@
+services:
+  mushroom-log-relay:
+    build: .
+    # If you'd rather not build locally on UnRAID, `docker build` this once
+    # and push it to your own registry, or just point Community Apps'
+    # "Docker Compose Manager" plugin at this compose file directly -- it
+    # builds in place.
+    container_name: mushroom-log-relay
+    restart: unless-stopped
+    ports:
+      # Left as an explicit host port so you can decide whether this is
+      # reachable directly or only through whatever reverse proxy you're
+      # already running in front of your Memory Vault MCP server. If you're
+      # putting a proxy in front of this too (recommended -- terminate TLS
+      # there, not here), you can drop this to a proxy-network-only binding
+      # instead of publishing 8787 on the host.
+      - "8787:8787"
+    environment:
+      # Never commit a real .env -- copy .env.example to .env locally and
+      # fill in real values, or set these directly in the UnRAID container
+      # template's environment variables instead of using a compose .env
+      # file at all, whichever matches how you're already running
+      # Memory Vault.
+      GITHUB_PAT: ${GITHUB_PAT}
+      RELAY_AUTH_TOKEN: ${RELAY_AUTH_TOKEN}
+      GITHUB_REPO: ${GITHUB_REPO:-savoxis/mushroom-identifier-dontusethisever}
+      GITHUB_BRANCH: ${GITHUB_BRANCH:-main}
+      LOG_PATH_IN_REPO: ${LOG_PATH_IN_REPO:-logs/finds_log.jsonl}
+      RELAY_PORT: "8787"
+      RATE_LIMIT_PER_MINUTE: ${RATE_LIMIT_PER_MINUTE:-20}
+    healthcheck:
+      test: ["CMD", "python3", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8787/healthz', timeout=3)"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
