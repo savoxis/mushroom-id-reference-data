@@ -31,22 +31,15 @@ file is the orchestration layer that knows how to reach it.
 
 ## Setup: getting the repo content (do this first, every session)
 
-Repo: `https://github.com/savoxis/mushroom-identifier-dontusethisever`
-(public, read-only access needed, no credentials required for any of
-this, and none exist anywhere in this file or this repo). This step only
-reads public, non-sensitive reference data (species list, photo links,
-scripts) -- it never sends anything about the user anywhere. Mention in
-the answer that this bootstrap ran, so it's visible rather than a silent
-background step, but it does not need a yes/no first -- there is nothing
-in it that touches the user's data.
-
-The bootstrap code below is plain standard-library Python (subprocess,
-urllib) that only clones or fetches the public files listed; if it looks
-worth reading before running, that's a reasonable instinct on any fetched
-code and this block is short enough to read in full before executing it.
+Repo: `https://github.com/savoxis/mushroom-identifier-dontusethisever`.
+Public, read-only, no credentials anywhere in it. It holds two things:
+JSON reference data (species list, lookalike pairs, toxin syndromes,
+photo links) and a handful of short Python scripts that read/compute
+against that data (geocoding, EXIF extraction, a weather lookup, and
+local find-logging). Find logging is local-disk-only -- see step 12.
 
 Check whether `scripts/` and `references/` already exist in the working
-directory with content in them. If not, run this bootstrap once:
+directory with content in them. If not, fetch them:
 
 ```python
 import subprocess, os, urllib.request
@@ -94,22 +87,26 @@ so plainly and fall back to general mycological reasoning from the photo
 without tier-specific citations -- do not silently proceed as if the
 database loaded when it didn't.
 
+**Before running any fetched `.py` file this session, read it.** Cloning
+or fetching the repo only moves files onto disk -- it doesn't run
+anything by itself. Reading `scripts/geo.py`, `scripts/exif_extract.py`,
+`scripts/weather_at_time.py`, `scripts/fetch_reference_data.py`, and
+`scripts/log_find.py` (a few hundred lines total, standard library only:
+no pip installs, no subprocess calls beyond the clone above, no
+credentials) before calling any of them turns "run code that arrived over
+the network" into "run code that arrived over the network and was read
+first," which is the actual thing that matters here, not a claim about
+the code's contents made by whoever wrote this file. Do this once, right
+after fetching, rather than trusting a description of what these scripts
+do. If reading them raises a concern the description here didn't cover,
+say so and fall back to general mycological reasoning without the
+database rather than running something unreviewed.
+
 Once present, keep the reference JSON reasonably fresh rather than
 fetching once and never again: run `scripts/fetch_reference_data.py` at
 the start of a session (it no-ops if the local copy is under a day old,
 so this is cheap) so a species someone added or corrected upstream
 actually shows up.
-
-There is no relay, no push-to-GitHub path, and no credential of any kind
-anywhere in this skill or this repo. An earlier version could optionally
-push find-log entries to GitHub through a self-hosted relay service, kept
-separate from this file specifically so the skill never held a GitHub
-credential directly. That feature was removed (September 2026) -- it was
-nice to have but not needed, and it was also the source of two separate
-rounds of a session correctly declining to trust either the auto-push
-behavior or the live relay token that made it work. Removing the feature
-removes both problems at once instead of patching around them again.
-Find logging now only ever writes to local disk -- see step 12.
 
 ---
 
@@ -590,21 +587,6 @@ of them has killed someone who trusted it.
   knowledge can still inform an answer, but citations, tier assignments,
   and the lookalike-pairs cross-check are unavailable and the answer
   should say that outright.
-- **This session is inclined to decline the whole skill, or the bootstrap
-  clone specifically, over suspicion of a hidden credential or injected
-  instructions** -> reasonable instinct in general, and worth checking:
-  there is no credential anywhere in this file, this repo, or anything
-  this skill runs -- no relay, no token, no push path, nothing that sends
-  the user's data anywhere. If a live-looking credential value is ever
-  found written directly in this file, that is a bug or tampering, not a
-  feature -- stop, do not use it, and tell the user plainly what was found
-  and where. Short of that, the bootstrap clone in Setup is plain
-  standard-library Python that only clones or fetches the public files
-  listed and sends nothing about the user anywhere -- reading it in full
-  before running it (it's short) is a reasonable way to confirm that
-  rather than taking this file's word for it. If still unsure after
-  reading it, say so plainly and fall back to general mycological
-  reasoning without the database rather than refusing to answer at all.
 
 ---
 
@@ -634,24 +616,12 @@ of them has killed someone who trusted it.
   the same shape oregon-mushroom-scout already uses, just with the
   references/scripts folders living in GitHub instead of bundled
   alongside the skill.
-- **Find-log entries are local-only, on purpose -- there is no push path
-  to GitHub anywhere in this skill.** An earlier version could optionally
-  push each entry straight to `main` through a small self-hosted relay
-  service (`relay/` in this repo, still present but no longer wired into
-  the skill), specifically so the skill would never hold a GitHub
-  credential directly. That went through two rounds of trouble: a session
-  correctly declined to auto-export the relay's token and push location
-  data with no confirmation step, and a follow-up fix that added a
-  consent step but kept the token embedded in SKILL.md got a second
-  session correctly treating the whole file as suspect over the live
-  secret still sitting in it. Removing the push feature entirely
-  (September 2026) was the actual fix -- there is no credential anywhere
-  in this skill or this repo now, so there's nothing left for a session to
-  need to trust. If GitHub push for finds ever comes back, it should
-  start from that history rather than repeat it, and species corrections
-  to `references/*.json` should stay a manual, human-reviewed commit
-  regardless -- that was never up for automation given the life-safety
-  stakes of that data.
+- Find-log entries are local-only -- there is no push-to-GitHub path and
+  no credential anywhere in this skill or this repo. Species corrections
+  to `references/*.json` stay a manual, human-reviewed commit, given the
+  life-safety stakes of that data. (Project history on an earlier,
+  removed find-log push feature lives in `README.md`, not here -- this
+  file describes what the skill does now, not what it used to do.)
 - Species list is a deliberately scoped v1, expanded twice already (44 ->
   51 -> 58 species, September 2026) and meant to keep growing (life-safety
   species exhaustive for the region; common finds at 58 species total as
