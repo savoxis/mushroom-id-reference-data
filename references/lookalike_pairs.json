@@ -82,5 +82,19 @@
     "dangerous_species_id": "sulfur-tuft",
     "dangerous_species_name": "Sulfur Tuft (Hypholoma fasciculare, Tier B)",
     "field_check": "Spore print: white = Armillaria territory. Dark purple-black = sulfur tuft. Gill color at maturity is a second tell (white on Armillaria vs yellow-green/purple-grey on sulfur tuft). Rule out Deadly Galerina by spore print first (rusty-brown) before using taste as a tiebreaker."
+  },
+  {
+    "common_find": "Velvet Foot / wild Enokitake",
+    "common_find_scientific": "Flammulina velutipes",
+    "dangerous_species_id": "deadly-galerina",
+    "dangerous_species_name": "Deadly Galerina (Galerina marginata, Tier A)",
+    "field_check": "Spore print is decisive: white = Velvet Foot, rusty brown to dull cinnamon-brown = Galerina, stop. Also check the stem: Galerina has a thin, fragile, powdery-looking stem with a delicate membranous ring and no dark velvet coating; Velvet Foot's stem is tough/cartilaginous, ringless, and develops a dark velvety fuzz from the base up. Both grow on wood in cold weather, so season and substrate alone tell you nothing."
+  },
+  {
+    "common_find": "Fairy Ring Mushroom",
+    "common_find_scientific": "Marasmius oreades",
+    "dangerous_species_id": "green-spored-parasol",
+    "dangerous_species_name": "Green-Spored Parasol (Chlorophyllum molybdites, Tier B) or toxic lawn LBMs (Clitocybe dealbata, Inocybe spp)",
+    "field_check": "Bend the stem: tough, pliant, twists like string = Fairy Ring territory; soft/brittle, snaps like a carrot = stop, not a fit. Confirm with a spore print (white required) and gill spacing (distinctly widely spaced, free/barely attached, not crowded or decurrent). Lawns and rings commonly host multiple species at once -- check every mushroom individually, not just the ones on the ring edge."
   }
 ]

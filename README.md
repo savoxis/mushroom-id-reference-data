@@ -27,8 +27,11 @@ JSON file, not a skill re-proposal.
 
 ```
 references/
-  species_registry.json    51 species, tiers A/B/C, full identifying detail
-  lookalike_pairs.json     12 dangerous-lookalike pairs with the field test
+  species_registry.json    58 species, tiers A/B/C, full identifying detail
+                            -- Tier C (edible/informational) entries carry
+                            deep-ID fields (spore print, cap/stem size,
+                            flesh/latex behavior) on top of the shared schema
+  lookalike_pairs.json     14 dangerous-lookalike pairs with the field test
                             that tells them apart
   toxin_syndromes.json     10 toxin syndrome profiles (onset, mechanism,
                             treatment window)
@@ -100,16 +103,40 @@ on disk instead of deleting good data over a network hiccup.
 
 ## Species database coverage
 
-- 51 species total: 9 Tier A (deadly, hard warning triggers), 11 Tier B
+- 58 species total: 9 Tier A (deadly, hard warning triggers), 11 Tier B
   (serious toxicity, including one -- Verpa bohemica -- whose safety is
-  genuinely disputed rather than confirmed either way), 31 Tier C (edible
+  genuinely disputed rather than confirmed either way), 38 Tier C (edible
   or mild-risk, informational)
-- 12 dangerous-lookalike pairs, each with a specific field-checkable
+- 14 dangerous-lookalike pairs, each with a specific field-checkable
   distinguishing test - never "trust your gut," always a concrete
   physical check
 - 10 toxin syndrome profiles backing the Tier A/B entries (Verpa bohemica's
   disputed status deliberately isn't forced into a confirmed-toxin row --
   see its entry in `species_registry.json`)
+
+### Tier C deep-ID fields (added September 2026)
+
+Every Tier C (edible/informational) entry now carries four extra fields
+beyond the shared schema, on top of `watch_for`:
+
+- `spore_print_color` -- the single most reliable non-destructive field
+  check most foragers skip
+- `cap_size` / `stem_size` -- real dimension ranges, not just qualitative
+  "large" or "small"
+- `flesh_characteristics` -- what happens when you cut it: staining,
+  bruising, latex color and behavior on air exposure (this is the field
+  that actually rules milk caps and blue-staining boletes in or out)
+
+These came out of a research pass across MushroomExpert.com, MykoWeb
+California Fungi, First Nature, NAMA, Pacific Northwest Key Council trial
+keys, and regional mycological society pages -- not guessed. Where sources
+disagreed on a range (which happens more than field guides let on), the
+entry says so instead of picking one number and presenting it as settled.
+Two entries also got corrected in the process: Lion's Mane (Hericium
+erinaceus) and Bear's Head Tooth (Hericium abietis) used to be lumped
+together as one entry -- they're genuinely different species (hardwood vs
+conifer host, unbranched vs branched structure) and now have separate
+entries with a field check to tell them apart.
 
 ## Photo reference coverage
 
@@ -139,8 +166,8 @@ because iNaturalist's quality_grade filter is a stronger single-query
 signal and MO/GBIF has no directly equivalent flag exposed through this
 query path.
 
-Current coverage: 51 of 51 species have at least one photo (153 photos
-total: 150 from iNaturalist, 3 from Mushroom Observer). The earlier gap --
+Current coverage: 58 of 58 species have at least one photo (174 photos
+total: 171 from iNaturalist, 3 from Mushroom Observer). The earlier gap --
 Blewit (Clitocybe nuda) had no open-licensed research-grade photo on
 iNaturalist under either its current name or the older synonym Lepista
 nuda -- is now filled by Mushroom Observer, which is exactly the kind of
@@ -194,25 +221,49 @@ python3 scripts/fetch_photo_refs.py "Amanita phalloides"   # single species test
   directly instead would be a reasonable simplification, not a required
   one.
 - **The photo-source and citation expansion (Sept 2026) was scoped, not
-  exhaustive.** Species count went from 44 to 51 and several thin
-  citations got stronger sourcing, but this was a bounded pass -- more
-  PNW species exist that aren't in here yet (this was never meant to be a
-  complete regional flora -- see the scoping note in SKILL.md's "Notes for
-  deployment" section), and MO/GBIF is currently used only as a
-  photo-gap-filler, not queried as thoroughly as iNaturalist for every
-  species. Both are fine places to keep extending from.
+  exhaustive.** Species count went from 44 to 51 in the first pass and
+  several thin citations got stronger sourcing, but this was a bounded
+  pass -- more PNW species exist that aren't in here yet (this was never
+  meant to be a complete regional flora -- see the scoping note in
+  SKILL.md's "Notes for deployment" section), and MO/GBIF is currently
+  used only as a photo-gap-filler, not queried as thoroughly as
+  iNaturalist for every species. Both are fine places to keep extending
+  from.
+- **The edible-species deep-ID expansion (Sept 2026, second pass) was
+  also scoped.** Went 51 -> 58 species (7 new Tier C edibles) and added
+  spore print / cap+stem size / flesh-and-latex-behavior fields to all 38
+  Tier C entries, but it's still not an exhaustive edible-species list for
+  the region -- there are more common PNW edibles worth adding later (more
+  Suillus species individually rather than grouped, more coral fungi
+  species individually, additional milk caps, etc). The culinary side
+  (taste, texture, prep, storage/preservation) was deliberately left out
+  of this pass -- it was scoped to identification-relevant data, not a
+  cookbook, so that's a reasonable next addition if wanted.
 
 ## Editing the database by hand
 
-Each entry in `species_registry.json` follows one schema (Tier C entries
-add a `watch_for` field, everything else is shared):
+Each entry in `species_registry.json` follows one schema. Tier A/B entries
+use `confused_with` / `cannot_determine_from_photo` / `distinguishing_test`;
+Tier C entries use `watch_for` in their place, plus four deep-ID fields
+that Tier A/B entries don't carry (those tiers already have
+`distinguishing_test` doing that job):
 
 ```
 id, common_name, scientific_name, tier, severity, toxin_syndrome, effect,
 key_features, habitat_substrate, season_west_coast, range_notes,
 confused_with, cannot_determine_from_photo, distinguishing_test,
 citations, inat_taxon_name
+
+# Tier C only, in place of confused_with/cannot_determine_from_photo/distinguishing_test:
+watch_for, spore_print_color, cap_size, stem_size, flesh_characteristics
 ```
+
+`spore_print_color`, `cap_size`, `stem_size`, and `flesh_characteristics`
+are plain-language fields, not a fixed vocabulary -- write real ranges and
+say when sources disagree rather than picking one number. For species with
+no true stem (shelf fungi, puffballs, truffles) or no true cap (corals,
+truffles), say "not applicable" or "no true stem" and note what's there
+instead rather than leaving the field blank.
 
 `inat_taxon_name` is what `fetch_photo_refs.py` queries against - it needs
 to be a real, currently-accepted iNaturalist taxon name (species or genus

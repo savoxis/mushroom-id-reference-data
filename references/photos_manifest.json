@@ -125,12 +125,12 @@
         "source": "inaturalist"
       },
       {
-        "url": "https://inaturalist-open-data.s3.amazonaws.com/photos/326573213/medium.jpeg",
+        "url": "https://inaturalist-open-data.s3.amazonaws.com/photos/12977208/medium.jpg",
         "license": "cc-by-nc",
-        "attribution": "(c) sgtowers83, some rights reserved (CC BY-NC)",
-        "observation_url": "https://www.inaturalist.org/observations/186823457",
-        "observer": "sgtowers83",
-        "observed_on": "2023-10-09",
+        "attribution": "(c) Peter Vahlberg, some rights reserved (CC BY-NC)",
+        "observation_url": "https://www.inaturalist.org/observations/9518979",
+        "observer": "Peter Vahlberg",
+        "observed_on": "2018-01-17",
         "source": "inaturalist"
       }
     ]
@@ -694,21 +694,21 @@
         "source": "inaturalist"
       },
       {
-        "url": "https://inaturalist-open-data.s3.amazonaws.com/photos/286858096/medium.jpg",
-        "license": "cc-by-nc",
-        "attribution": "(c) jc6463, some rights reserved (CC BY-NC)",
-        "observation_url": "https://www.inaturalist.org/observations/165697840",
-        "observer": "jc6463",
-        "observed_on": "2023-05-06",
-        "source": "inaturalist"
-      },
-      {
         "url": "https://inaturalist-open-data.s3.amazonaws.com/photos/323165842/medium.jpg",
         "license": "cc-by-nc",
         "attribution": "(c) Dominic Kurdziolek, some rights reserved (CC BY-NC)",
         "observation_url": "https://www.inaturalist.org/observations/185075419",
         "observer": "Dominic Kurdziolek",
         "observed_on": "2023-09-26",
+        "source": "inaturalist"
+      },
+      {
+        "url": "https://inaturalist-open-data.s3.amazonaws.com/photos/286858096/medium.jpg",
+        "license": "cc-by-nc",
+        "attribution": "(c) jc6463, some rights reserved (CC BY-NC)",
+        "observation_url": "https://www.inaturalist.org/observations/165697840",
+        "observer": "jc6463",
+        "observed_on": "2023-05-06",
         "source": "inaturalist"
       }
     ]
@@ -771,12 +771,12 @@
         "source": "inaturalist"
       },
       {
-        "url": "https://inaturalist-open-data.s3.amazonaws.com/photos/251231632/medium.jpg",
+        "url": "https://inaturalist-open-data.s3.amazonaws.com/photos/227257416/medium.jpg",
         "license": "cc-by-nc",
-        "attribution": "(c) John Klymko, some rights reserved (CC BY-NC)",
-        "observation_url": "https://www.inaturalist.org/observations/146166867",
-        "observer": "John Klymko",
-        "observed_on": "2022-09-18",
+        "attribution": "(c) odinbriem0, some rights reserved (CC BY-NC)",
+        "observation_url": "https://www.inaturalist.org/observations/133412279",
+        "observer": "odinbriem0",
+        "observed_on": "2022-09-02",
         "source": "inaturalist"
       }
     ]
@@ -975,12 +975,12 @@
         "source": "inaturalist"
       },
       {
-        "url": "https://inaturalist-open-data.s3.amazonaws.com/photos/60037032/medium.jpeg",
+        "url": "https://inaturalist-open-data.s3.amazonaws.com/photos/339941316/medium.jpg",
         "license": "cc-by-nc",
-        "attribution": "(c) Park Guide, some rights reserved (CC BY-NC)",
-        "observation_url": "https://www.inaturalist.org/observations/37821828",
-        "observer": "Park Guide",
-        "observed_on": "2019-11-18",
+        "attribution": "(c) Justin Carder, some rights reserved (CC BY-NC)",
+        "observation_url": "https://www.inaturalist.org/observations/193510836",
+        "observer": "Justin Carder",
+        "observed_on": "2023-12-08",
         "source": "inaturalist"
       }
     ]
@@ -1145,12 +1145,12 @@
         "source": "inaturalist"
       },
       {
-        "url": "https://inaturalist-open-data.s3.amazonaws.com/photos/253112448/medium.jpg",
-        "license": "cc-by-nc",
-        "attribution": "(c) Lisa Weber, some rights reserved (CC BY-NC)",
-        "observation_url": "https://www.inaturalist.org/observations/147128241",
-        "observer": "Lisa Weber",
-        "observed_on": "2023-01-21",
+        "url": "https://inaturalist-open-data.s3.amazonaws.com/photos/5484628/medium.jpeg",
+        "license": "cc-by-sa",
+        "attribution": "(c) Old Goat, some rights reserved (CC BY-SA)",
+        "observation_url": "http://www.inaturalist.org/observations/4528310",
+        "observer": "Old Goat",
+        "observed_on": "2016-11-04",
         "source": "inaturalist"
       }
     ]
@@ -1327,7 +1327,7 @@
   },
   "lions-mane": {
     "common_name": "Lion's mane",
-    "scientific_name": "Hericium erinaceus / western H. abietis",
+    "scientific_name": "Hericium erinaceus",
     "tier": "C",
     "photos": [
       {
@@ -1383,12 +1383,12 @@
         "source": "inaturalist"
       },
       {
-        "url": "https://inaturalist-open-data.s3.amazonaws.com/photos/174178669/medium.jpg",
-        "license": "cc-by-nc",
-        "attribution": "(c) Shahram Tavakol, some rights reserved (CC BY-NC)",
-        "observation_url": "https://www.inaturalist.org/observations/103991069",
-        "observer": "Shahram Tavakol",
-        "observed_on": "2021-12-30",
+        "url": "https://inaturalist-open-data.s3.amazonaws.com/photos/345728906/medium.jpeg",
+        "license": "cc-by",
+        "attribution": "(c) Isaac Krone, some rights reserved (CC BY)",
+        "observation_url": "https://www.inaturalist.org/observations/196381746",
+        "observer": "Isaac Krone",
+        "observed_on": "2024-01-11",
         "source": "inaturalist"
       }
     ]
@@ -1485,12 +1485,12 @@
         "source": "inaturalist"
       },
       {
-        "url": "https://inaturalist-open-data.s3.amazonaws.com/photos/163842830/medium.jpeg",
-        "license": "cc-by-nc",
-        "attribution": "(c) Brenda Connolly, some rights reserved (CC BY-NC)",
-        "observation_url": "https://www.inaturalist.org/observations/98413828",
-        "observer": "Brenda Connolly",
-        "observed_on": "2021-10-16",
+        "url": "https://inaturalist-open-data.s3.amazonaws.com/photos/161093491/medium.jpg",
+        "license": "cc0",
+        "attribution": "no rights reserved",
+        "observation_url": "https://www.inaturalist.org/observations/96926770",
+        "observer": "Bethany Teigen",
+        "observed_on": "2021-10-02",
         "source": "inaturalist"
       }
     ]
@@ -1705,15 +1705,6 @@
     "tier": "C",
     "photos": [
       {
-        "url": "https://inaturalist-open-data.s3.amazonaws.com/photos/321626629/medium.jpeg",
-        "license": "cc-by-nc",
-        "attribution": "(c) Konrad and Roland Greinwald, some rights reserved (CC BY-NC)",
-        "observation_url": "https://www.inaturalist.org/observations/184269546",
-        "observer": "Konrad and Roland Greinwald",
-        "observed_on": "2022-08-20",
-        "source": "inaturalist"
-      },
-      {
         "url": "https://inaturalist-open-data.s3.amazonaws.com/photos/223748214/medium.jpg",
         "license": "cc-by-nc",
         "attribution": "(c) Jason Sunseri, some rights reserved (CC BY-NC)",
@@ -1723,12 +1714,259 @@
         "source": "inaturalist"
       },
       {
+        "url": "https://inaturalist-open-data.s3.amazonaws.com/photos/321626629/medium.jpeg",
+        "license": "cc-by-nc",
+        "attribution": "(c) Konrad and Roland Greinwald, some rights reserved (CC BY-NC)",
+        "observation_url": "https://www.inaturalist.org/observations/184269546",
+        "observer": "Konrad and Roland Greinwald",
+        "observed_on": "2022-08-20",
+        "source": "inaturalist"
+      },
+      {
         "url": "https://inaturalist-open-data.s3.amazonaws.com/photos/84604672/medium.jpeg",
         "license": "cc-by",
         "attribution": "(c) Kevin Speray, some rights reserved (CC BY)",
         "observation_url": "https://www.inaturalist.org/observations/53201854",
         "observer": "Kevin Speray",
         "observed_on": "2020-07-14",
+        "source": "inaturalist"
+      }
+    ]
+  },
+  "aborted-entoloma": {
+    "common_name": "Aborted Entoloma",
+    "scientific_name": "Entoloma abortivum",
+    "tier": "C",
+    "photos": [
+      {
+        "url": "https://inaturalist-open-data.s3.amazonaws.com/photos/308652592/medium.jpeg",
+        "license": "cc-by-nc",
+        "attribution": "(c) Mixman_Saga, some rights reserved (CC BY-NC)",
+        "observation_url": "https://www.inaturalist.org/observations/177462531",
+        "observer": "Mixman_Saga",
+        "observed_on": "2021-12-09",
+        "source": "inaturalist"
+      },
+      {
+        "url": "https://inaturalist-open-data.s3.amazonaws.com/photos/162814157/medium.jpg",
+        "license": "cc-by-nc",
+        "attribution": "(c) robini, some rights reserved (CC BY-NC)",
+        "observation_url": "https://www.inaturalist.org/observations/97856240",
+        "observer": "robini",
+        "observed_on": "2021-10-08",
+        "source": "inaturalist"
+      },
+      {
+        "url": "https://inaturalist-open-data.s3.amazonaws.com/photos/97358440/medium.jpeg",
+        "license": "cc-by-nc",
+        "attribution": "(c) seffbones, some rights reserved (CC BY-NC)",
+        "observation_url": "https://www.inaturalist.org/observations/60872138",
+        "observer": "seffbones",
+        "observed_on": "2020-09-26",
+        "source": "inaturalist"
+      }
+    ]
+  },
+  "bears-head-tooth": {
+    "common_name": "Bear's Head Tooth",
+    "scientific_name": "Hericium abietis",
+    "tier": "C",
+    "photos": [
+      {
+        "url": "https://inaturalist-open-data.s3.amazonaws.com/photos/29980689/medium.jpg",
+        "license": "cc-by-nc",
+        "attribution": "(c) burkemtnman, some rights reserved (CC BY-NC)",
+        "observation_url": "https://www.inaturalist.org/observations/19484947",
+        "observer": "burkemtnman",
+        "observed_on": "2015-09-26",
+        "source": "inaturalist"
+      },
+      {
+        "url": "https://inaturalist-open-data.s3.amazonaws.com/photos/541037250/medium.jpg",
+        "license": "cc-by-nc",
+        "attribution": "(c) ym_wang_pnw, some rights reserved (CC BY-NC)",
+        "observation_url": "https://www.inaturalist.org/observations/300283981",
+        "observer": "ym_wang_pnw",
+        "observed_on": "2025-07-22",
+        "source": "inaturalist"
+      },
+      {
+        "url": "https://inaturalist-open-data.s3.amazonaws.com/photos/332966131/medium.jpg",
+        "license": "cc-by-nc",
+        "attribution": "(c) sharonkiwi13, some rights reserved (CC BY-NC)",
+        "observation_url": "https://www.inaturalist.org/observations/189995230",
+        "observer": "sharonkiwi13",
+        "observed_on": "2023-11-03",
+        "source": "inaturalist"
+      }
+    ]
+  },
+  "velvet-foot": {
+    "common_name": "Velvet Foot (wild Enokitake)",
+    "scientific_name": "Flammulina velutipes",
+    "tier": "C",
+    "photos": [
+      {
+        "url": "https://inaturalist-open-data.s3.amazonaws.com/photos/44406720/medium.jpg",
+        "license": "cc-by-nc",
+        "attribution": "(c) Torbjorn von Strokirch, some rights reserved (CC BY-NC)",
+        "observation_url": "https://www.inaturalist.org/observations/28484166",
+        "observer": "Torbjorn von Strokirch",
+        "observed_on": "2019-07-05",
+        "source": "inaturalist"
+      },
+      {
+        "url": "https://inaturalist-open-data.s3.amazonaws.com/photos/30127145/medium.jpg",
+        "license": "cc-by-nc",
+        "attribution": "(c) Blue Collar Gardens, some rights reserved (CC BY-NC)",
+        "observation_url": "https://www.inaturalist.org/observations/19571487",
+        "observer": "Blue Collar Gardens",
+        "observed_on": "2019-01-08",
+        "source": "inaturalist"
+      },
+      {
+        "url": "https://inaturalist-open-data.s3.amazonaws.com/photos/5630946/medium.jpg",
+        "license": "cc-by-nc",
+        "attribution": "(c) Leanne Wallis, some rights reserved (CC BY-NC)",
+        "observation_url": "http://inaturalist.ca/observations/4652144",
+        "observer": "Leanne Wallis",
+        "observed_on": "2012-09-20",
+        "source": "inaturalist"
+      }
+    ]
+  },
+  "fairy-ring-mushroom": {
+    "common_name": "Fairy Ring Mushroom",
+    "scientific_name": "Marasmius oreades",
+    "tier": "C",
+    "photos": [
+      {
+        "url": "https://inaturalist-open-data.s3.amazonaws.com/photos/675385483/medium.jpg",
+        "license": "cc-by-nc",
+        "attribution": "(c) \u0421\u0443\u043b\u0442\u0430\u043d\u0433\u0430\u0440\u0435\u0435\u0432\u0430 \u041b\u0438\u043b\u0438\u044f, some rights reserved (CC BY-NC)",
+        "observation_url": "https://www.inaturalist.org/observations/369730236",
+        "observer": "\u0421\u0443\u043b\u0442\u0430\u043d\u0433\u0430\u0440\u0435\u0435\u0432\u0430 \u041b\u0438\u043b\u0438\u044f",
+        "observed_on": "2026-06-08",
+        "source": "inaturalist"
+      },
+      {
+        "url": "https://inaturalist-open-data.s3.amazonaws.com/photos/558301643/medium.jpg",
+        "license": "cc-by-nc",
+        "attribution": "(c) Ben Kinsley, some rights reserved (CC BY-NC)",
+        "observation_url": "https://www.inaturalist.org/observations/309394182",
+        "observer": "Ben Kinsley",
+        "observed_on": "2025-08-26",
+        "source": "inaturalist"
+      },
+      {
+        "url": "https://inaturalist-open-data.s3.amazonaws.com/photos/578857109/medium.jpg",
+        "license": "cc-by-nc",
+        "attribution": "(c) Fatih Gen\u00e7, some rights reserved (CC BY-NC)",
+        "observation_url": "https://www.inaturalist.org/observations/320178572",
+        "observer": "Fatih Gen\u00e7",
+        "observed_on": "2025-10-08",
+        "source": "inaturalist"
+      }
+    ]
+  },
+  "oregon-white-truffle": {
+    "common_name": "Oregon White Truffle",
+    "scientific_name": "Tuber oregonense",
+    "tier": "C",
+    "photos": [
+      {
+        "url": "https://inaturalist-open-data.s3.amazonaws.com/photos/296302116/medium.jpg",
+        "license": "cc-by",
+        "attribution": "(c) Alan Rockefeller, some rights reserved (CC BY)",
+        "observation_url": "http://www.inaturalist.org/observations/4744182",
+        "observer": "Alan Rockefeller",
+        "observed_on": "2013-02-02",
+        "source": "inaturalist"
+      },
+      {
+        "url": "https://inaturalist-open-data.s3.amazonaws.com/photos/57250176/medium.jpeg",
+        "license": "cc-by-nc-sa",
+        "attribution": "(c) Richard Tehan, some rights reserved (CC BY-NC-SA)",
+        "observation_url": "https://www.inaturalist.org/observations/36232590",
+        "observer": "Richard Tehan",
+        "observed_on": "2019-11-23",
+        "source": "inaturalist"
+      },
+      {
+        "url": "https://inaturalist-open-data.s3.amazonaws.com/photos/110569468/medium.jpeg",
+        "license": "cc-by-nc",
+        "attribution": "(c) Brittany Marcotte, some rights reserved (CC BY-NC)",
+        "observation_url": "https://www.inaturalist.org/observations/68306502",
+        "observer": "Brittany Marcotte",
+        "observed_on": "2021-01-18",
+        "source": "inaturalist"
+      }
+    ]
+  },
+  "white-chanterelle": {
+    "common_name": "White Chanterelle",
+    "scientific_name": "Cantharellus subalbidus",
+    "tier": "C",
+    "photos": [
+      {
+        "url": "https://inaturalist-open-data.s3.amazonaws.com/photos/232689620/medium.jpeg",
+        "license": "cc-by",
+        "attribution": "(c) Alan Rockefeller, some rights reserved (CC BY)",
+        "observation_url": "https://www.inaturalist.org/observations/136349995",
+        "observer": "Alan Rockefeller",
+        "observed_on": "2022-09-24",
+        "source": "inaturalist"
+      },
+      {
+        "url": "https://inaturalist-open-data.s3.amazonaws.com/photos/435564889/medium.jpeg",
+        "license": "cc-by-nc",
+        "attribution": "(c) Drew T Henderson, some rights reserved (CC BY-NC)",
+        "observation_url": "https://www.inaturalist.org/observations/244197590",
+        "observer": "Drew T Henderson",
+        "observed_on": "2024-09-24",
+        "source": "inaturalist"
+      },
+      {
+        "url": "https://inaturalist-open-data.s3.amazonaws.com/photos/11449035/medium.jpg",
+        "license": "cc-by-nc",
+        "attribution": "(c) Kate Turner, some rights reserved (CC BY-NC)",
+        "observation_url": "https://www.inaturalist.org/observations/8570504",
+        "observer": "Kate Turner",
+        "observed_on": "2017-10-26",
+        "source": "inaturalist"
+      }
+    ]
+  },
+  "the-prince": {
+    "common_name": "The Prince",
+    "scientific_name": "Agaricus augustus",
+    "tier": "C",
+    "photos": [
+      {
+        "url": "https://inaturalist-open-data.s3.amazonaws.com/photos/7344549/medium.jpg",
+        "license": "cc-by-nc",
+        "attribution": "(c) Christian Schwarz, some rights reserved (CC BY-NC)",
+        "observation_url": "https://www.inaturalist.org/observations/5891775",
+        "observer": "Christian Schwarz",
+        "observed_on": "2017-04-20",
+        "source": "inaturalist"
+      },
+      {
+        "url": "https://inaturalist-open-data.s3.amazonaws.com/photos/45158795/medium.jpg",
+        "license": "cc-by-nc",
+        "attribution": "(c) Peter Vahlberg, some rights reserved (CC BY-NC)",
+        "observation_url": "https://www.inaturalist.org/observations/28952072",
+        "observer": "Peter Vahlberg",
+        "observed_on": "2019-07-16",
+        "source": "inaturalist"
+      },
+      {
+        "url": "https://inaturalist-open-data.s3.amazonaws.com/photos/131191196/medium.jpg",
+        "license": "cc-by-nc",
+        "attribution": "(c) Susie, some rights reserved (CC BY-NC)",
+        "observation_url": "https://www.inaturalist.org/observations/80063941",
+        "observer": "Susie",
+        "observed_on": "2021-05-22",
         "source": "inaturalist"
       }
     ]

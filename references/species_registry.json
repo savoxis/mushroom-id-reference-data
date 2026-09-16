@@ -587,9 +587,17 @@
       {
         "title": "Stropharia rugosoannulata - MushroomExpert.Com",
         "url": "https://www.mushroomexpert.com/stropharia_rugosoannulata.html"
+      },
+      {
+        "title": "Stropharia rugosoannulata, Wine Roundhead mushroom",
+        "url": "https://www.first-nature.com/fungi/stropharia-rugosoannulata.php"
       }
     ],
-    "inat_taxon_name": "Stropharia rugosoannulata"
+    "inat_taxon_name": "Stropharia rugosoannulata",
+    "spore_print_color": "Dark purple-brown to purplish-black.",
+    "cap_size": "4-14 cm diameter, starting convex/bell-shaped and flattening with age.",
+    "stem_size": "8-18 cm long x 1-2.5 cm thick, roughly equal width, with a large, distinctive radially-grooved (cogwheel-like) ring.",
+    "flesh_characteristics": "Flesh is white, firm, and unchanging in color when cut or bruised."
   },
   {
     "id": "admirable-bolete",
@@ -615,9 +623,17 @@
       {
         "title": "Admirable Bolete - Kitsap Peninsula Mycological Society",
         "url": "https://kitsapmushrooms.org/edible-mushrooms/admirable-bolete/"
+      },
+      {
+        "title": "Admirable Bolete - Kitsap Peninsula Mycological Society",
+        "url": "https://kitsapmushrooms.org/edible-mushrooms/admirable-bolete/"
       }
     ],
-    "inat_taxon_name": "Aureoboletus mirabilis"
+    "inat_taxon_name": "Aureoboletus mirabilis",
+    "spore_print_color": "Olive-brown.",
+    "cap_size": "7-14 cm diameter, convex expanding to plano-convex, velvety reddish-brown surface.",
+    "stem_size": "7-14 cm long x 2-4 cm thick, narrowed toward the top and enlarged at the base.",
+    "flesh_characteristics": "Flesh is unchanging where cut/exposed; unlike most boletes, the pores/tubes do NOT bruise blue, a key diagnostic feature."
   },
   {
     "id": "hawks-wing",
@@ -639,9 +655,17 @@
       {
         "title": "Sarcodon imbricatus - MykoWeb California Fungi",
         "url": "https://www.mykoweb.com/CAF/species/Sarcodon_imbricatus.html"
+      },
+      {
+        "title": "Trial field key to the species of Sarcodon in the Pacific Northwest - Pacific Northwest Key Council",
+        "url": "https://www.svims.ca/council/Sarcod.htm"
       }
     ],
-    "inat_taxon_name": "Sarcodon imbricatus"
+    "inat_taxon_name": "Sarcodon imbricatus",
+    "spore_print_color": "Brown.",
+    "cap_size": "Sources disagree modestly on the upper bound: PNW Key Council's trial key gives 5-20 cm; MykoWeb (California Fungi) gives 5-25 cm.",
+    "stem_size": "Roughly 3.5-8 cm long x 2-3.5 cm thick, whitish when young, becoming brownish and velvety-textured toward the base.",
+    "flesh_characteristics": "Thick, cream-to-buff or whitish-gray-brown flesh, no bruising reaction when cut; taste ranges mild to notably bitter, increasing with age."
   },
   {
     "id": "pacific-golden-chanterelle",
@@ -659,8 +683,17 @@
     "cannot_determine_from_photo": null,
     "distinguishing_test": null,
     "watch_for": "Western Jack-O-Lantern -- see lookalike pairs table",
-    "citations": [],
-    "inat_taxon_name": "Cantharellus formosus"
+    "citations": [
+      {
+        "title": "Cantharellus formosus - Pacific golden chanterelle (Beaty Biodiversity Museum, UBC)",
+        "url": "https://explore.beatymuseum.ubc.ca/mushroomsup/C_formosus.html"
+      }
+    ],
+    "inat_taxon_name": "Cantharellus formosus",
+    "spore_print_color": "Whitish to pale yellowish.",
+    "cap_size": "3-10 cm diameter typically, though mature specimens up to ~15 cm are sometimes reported; convex becoming flat or shallowly depressed with wavy, often false-gilled margins.",
+    "stem_size": "4-6 cm long x up to 1.5 cm thick at the apex, tapering downward, continuous with the cap with no clear cap/stem demarcation.",
+    "flesh_characteristics": "Whitish to pale yellowish flesh; cap and stem base often bruise yellowish to brownish -- a mild, non-blackening reaction."
   },
   {
     "id": "winter-chanterelle",
@@ -678,8 +711,17 @@
     "cannot_determine_from_photo": null,
     "distinguishing_test": null,
     "watch_for": "Generally low-risk group, still confirm ridges not true gills",
-    "citations": [],
-    "inat_taxon_name": "Craterellus tubaeformis"
+    "citations": [
+      {
+        "title": "Yellowfoot - Kitsap Peninsula Mycological Society",
+        "url": "https://kitsapmushrooms.org/edible-mushrooms/yellowfoot/"
+      }
+    ],
+    "inat_taxon_name": "Craterellus tubaeformis",
+    "spore_print_color": "White.",
+    "cap_size": "2-7 cm diameter, convex at first, becoming vase-shaped with an eventual central perforation.",
+    "stem_size": "3-9 cm long x 0.3-0.8 cm thick, fairly uniform width, becoming hollow with age; the stem is characteristically yellow (\"yellowfoot\"), a key field mark.",
+    "flesh_characteristics": "Thin, insubstantial flesh, brownish to yellowish; no notable bruising or latex reaction reported."
   },
   {
     "id": "spring-king-bolete",
@@ -697,8 +739,17 @@
     "cannot_determine_from_photo": null,
     "distinguishing_test": null,
     "watch_for": "Amanita smithiana if pores misread as gills before opening -- see lookalike pairs table",
-    "citations": [],
-    "inat_taxon_name": "Boletus rex-veris"
+    "citations": [
+      {
+        "title": "Oregon's Spring Bolete - Cascade Mycological Society",
+        "url": "https://cascademyco.org/2018/04/oregons-spring-bolete/"
+      }
+    ],
+    "inat_taxon_name": "Boletus rex-veris",
+    "spore_print_color": "Olive-brown.",
+    "cap_size": "9-18 cm diameter, reddish-brown, a notably large robust bolete (\"hamburger-bun\" shaped cap), sometimes with a whitish bloom at the margin when young.",
+    "stem_size": "5-10 cm long x 2-6 cm thick, stout, often with fine reticulation (net-like pattern) on the upper portion.",
+    "flesh_characteristics": "White flesh, unchanging when cut; the pore surface does NOT bruise blue, distinguishing it from some other bolete species that stain blue on handling."
   },
   {
     "id": "fall-king-bolete",
@@ -716,8 +767,17 @@
     "cannot_determine_from_photo": null,
     "distinguishing_test": null,
     "watch_for": "Avoid any bolete with red/orange pores that bruise blue -- flags the Boletus/Suillellus satan's bolete toxic group, not covered in depth here, treat as a stop sign",
-    "citations": [],
-    "inat_taxon_name": "Boletus edulis"
+    "citations": [
+      {
+        "title": "Boletus edulis - California Fungi (MykoWeb)",
+        "url": "https://www.mykoweb.com/CAF/species/Boletus_edulis.html"
+      }
+    ],
+    "inat_taxon_name": "Boletus edulis",
+    "spore_print_color": "Olive-brown.",
+    "cap_size": "7-25 cm diameter, brown, greasy-to-tacky, bald cap surface.",
+    "stem_size": "7-20 cm long x 3-8 cm thick, swollen/bulbous meaty stem with fine reticulation.",
+    "flesh_characteristics": "Thick, white flesh, unchanging -- does not stain or bruise on cutting or handling, a key trait separating it from toxic bitter-bolete and blue-staining lookalikes. West Coast \"B. edulis group\" material is understood to be a species complex, not necessarily identical to true European B. edulis."
   },
   {
     "id": "true-morels",
@@ -735,8 +795,21 @@
     "cannot_determine_from_photo": null,
     "distinguishing_test": null,
     "watch_for": "False morel (Gyromitra, Tier A) -- see lookalike pairs table, most important check in spring",
-    "citations": [],
-    "inat_taxon_name": "Morchella"
+    "citations": [
+      {
+        "title": "Morchellaceae in the Pacific Northwest - Pacific Northwest Key Council",
+        "url": "https://www.svims.ca/council/Morche.htm"
+      },
+      {
+        "title": "Burn Morel Taxonomy: The 5 Morchella species found in wildfires - Modern Forager",
+        "url": "https://modern-forager.com/all-about-burn-morels/"
+      }
+    ],
+    "inat_taxon_name": "Morchella",
+    "spore_print_color": "Creamy white to pale ochre/yellowish.",
+    "cap_size": "Roughly 3-15 cm tall is typical across the West Coast species complex; some yellow-morel taxa (e.g. M. esculentoides) can reach up to ~22 cm tall in ideal conditions -- treat very large specimens as possible but not typical.",
+    "stem_size": "Roughly 2-12 cm long x 1.5-4 cm thick, hollow, often becoming chambered/layered near the base at maturity.",
+    "flesh_characteristics": "Cap and stem are completely hollow (single continuous chamber), thin and brittle-waxy flesh, no latex. Most true morels show no bruising, but the West Coast landscaping species M. rufobrunnea is a notable exception -- its young surfaces bruise reddish-orange to salmon."
   },
   {
     "id": "american-matsutake",
@@ -754,8 +827,17 @@
     "cannot_determine_from_photo": null,
     "distinguishing_test": null,
     "watch_for": "Amanita smithiana -- see lookalike pairs table, dig the base every time",
-    "citations": [],
-    "inat_taxon_name": "Tricholoma murrillianum"
+    "citations": [
+      {
+        "title": "Tricholoma murrillianum - California Fungi (MykoWeb)",
+        "url": "https://www.mykoweb.com/CAF/species/Tricholoma_murrillianum.html"
+      }
+    ],
+    "inat_taxon_name": "Tricholoma murrillianum",
+    "spore_print_color": "White.",
+    "cap_size": "Sources disagree: MushroomExpert gives 5-10 cm; MykoWeb gives a broader 5-25 cm for mature/robust specimens.",
+    "stem_size": "MushroomExpert: 4-10 cm long x 1-2.5 cm thick, roughly equal with a slightly tapered base; MykoWeb gives a larger 4-15 cm long x 1-6 cm thick.",
+    "flesh_characteristics": "Firm white flesh with a strong, distinctive spicy-cinnamon odor; sources differ on staining -- MushroomExpert says flesh doesn't bruise though gills can brown-stain with age, MykoWeb describes the flesh as bruising orange-brown."
   },
   {
     "id": "oyster-mushroom",
@@ -773,8 +855,17 @@
     "cannot_determine_from_photo": null,
     "distinguishing_test": null,
     "watch_for": "Generally low dangerous-lookalike risk on the West Coast; confirm growing on wood, not ground",
-    "citations": [],
-    "inat_taxon_name": "Pleurotus ostreatus"
+    "citations": [
+      {
+        "title": "Pleurotus pulmonarius (MushroomExpert.Com)",
+        "url": "https://www.mushroomexpert.com/pleurotus_pulmonarius.html"
+      }
+    ],
+    "inat_taxon_name": "Pleurotus ostreatus",
+    "spore_print_color": "White to faintly yellowish or lilac (P. ostreatus); whitish, grayish, or lilac (P. pulmonarius).",
+    "cap_size": "P. ostreatus: 3-15 cm across; P. pulmonarius: generally smaller, 3-10 cm across.",
+    "stem_size": "P. ostreatus: stem usually rudimentary and lateral or nearly absent; P. pulmonarius more often has a distinct stem, 1-4 cm long x 0.5-1 cm thick.",
+    "flesh_characteristics": "Thick, white flesh, unchanging when sliced (no bruising/staining) in both species."
   },
   {
     "id": "lobster-mushroom",
@@ -792,8 +883,17 @@
     "cannot_determine_from_photo": null,
     "distinguishing_test": null,
     "watch_for": "Confirm firm and fully colored -- soft or off-smelling specimens should be skipped regardless of ID",
-    "citations": [],
-    "inat_taxon_name": "Hypomyces lactifluorum"
+    "citations": [
+      {
+        "title": "Hypomyces lactifluorum - Lobster mushroom (Beaty Biodiversity Museum, UBC)",
+        "url": "https://explore.beatymuseum.ubc.ca/mushroomsup/H_lactifluorum.html"
+      }
+    ],
+    "inat_taxon_name": "Hypomyces lactifluorum",
+    "spore_print_color": "Not applicable in the normal sense: this is a parasitic mold (Hypomyces lactifluorum) overgrowing a Russula/Lactifluus host, obliterating its gills, so no conventional spore print can be taken. What's observable instead is an orange-red crust studded with tiny pimple-like perithecia (the parasite's own fruiting structures).",
+    "cap_size": "Highly variable and irregular, taking the deformed shape of the host mushroom, commonly 5-20+ cm across as a lumpy, brain-like or club/rosette-shaped mass.",
+    "stem_size": "No normal stem is discernible; the host's stem is typically fused into the same distorted, solid orange mass as the \"cap.\"",
+    "flesh_characteristics": "Interior flesh is firm and white in fresh specimens, unchanged in color from the original host tissue despite the dramatic external transformation. Aging/rotting specimens soften and can develop a strong fishy odor -- a sign they should not be eaten."
   },
   {
     "id": "chicken-of-the-woods",
@@ -811,8 +911,17 @@
     "cannot_determine_from_photo": null,
     "distinguishing_test": null,
     "watch_for": "West Coast-specific caution: specimens on eucalyptus documented to cause GI upset/allergic-type reactions in some people even when properly cooked -- note the host tree, not just the mushroom",
-    "citations": [],
-    "inat_taxon_name": "Laetiporus gilbertsonii"
+    "citations": [
+      {
+        "title": "Laetiporus gilbertsonii - California Fungi (MykoWeb)",
+        "url": "https://www.mykoweb.com/CAF/species/Laetiporus_gilbertsonii.html"
+      }
+    ],
+    "inat_taxon_name": "Laetiporus gilbertsonii",
+    "spore_print_color": "White.",
+    "cap_size": "Grows as overlapping shelves/brackets rather than a single cap; individual shelves range roughly 7-55 cm broad in aggregate clusters.",
+    "stem_size": "No true stem: sessile to substipitate, attaching directly to the wood substrate with at most a rudimentary stub.",
+    "flesh_characteristics": "Flesh 2-3 cm thick, white to yellow when fresh and succulent; no notable bruising/staining, but becomes dry, pale, and crumbly with age."
   },
   {
     "id": "hedgehog-mushroom",
@@ -830,8 +939,17 @@
     "cannot_determine_from_photo": null,
     "distinguishing_test": null,
     "watch_for": "Low dangerous-lookalike risk; the tooth surface is distinctive",
-    "citations": [],
-    "inat_taxon_name": "Hydnum repandum"
+    "citations": [
+      {
+        "title": "Hydnum repandum - California Fungi (MykoWeb)",
+        "url": "https://www.mykoweb.com/CAF/species/Hydnum_repandum.html"
+      }
+    ],
+    "inat_taxon_name": "Hydnum repandum",
+    "spore_print_color": "White.",
+    "cap_size": "Sources disagree slightly: MushroomExpert gives 6-15 cm wide for H. repandum; MykoWeb gives 2-12 cm; H. umbilicatum is smaller, typically 2-6 cm with a central depression/umbo.",
+    "stem_size": "Roughly 3-7 cm long x 1-2.5 cm thick, often off-center to central, tapering or equal.",
+    "flesh_characteristics": "Sources disagree on staining: MushroomExpert describes whitish flesh as unchanging when sliced; MykoWeb describes pale-buff, brittle flesh that bruises buff-orange. The toothed (not gilled) spore-bearing surface underneath the cap is the key diagnostic feature."
   },
   {
     "id": "cauliflower-mushroom",
@@ -849,8 +967,17 @@
     "cannot_determine_from_photo": null,
     "distinguishing_test": null,
     "watch_for": "Low risk; distinctive form",
-    "citations": [],
-    "inat_taxon_name": "Sparassis radicata"
+    "citations": [
+      {
+        "title": "Sparassis radicata - Cauliflower mushroom (Beaty Biodiversity Museum, UBC)",
+        "url": "https://explore.beatymuseum.ubc.ca/mushroomsup/S_radicata.html"
+      }
+    ],
+    "inat_taxon_name": "Sparassis radicata",
+    "spore_print_color": "Whitish.",
+    "cap_size": "Not a discrete cap; the whole convoluted, noodle-like fruitbody measures 10-45 cm across and up to 30 cm high.",
+    "stem_size": "No true stem in the usual sense: a thick, rooting/radicating stalk-like base up to 30 cm long tapers down into the ground, often attached to a buried conifer root, and is easily left behind during collection.",
+    "flesh_characteristics": "Whitish to yellowish/tan flesh throughout the branches and base, thin and unchanging when sliced."
   },
   {
     "id": "shaggy-mane",
@@ -869,7 +996,11 @@
     "distinguishing_test": null,
     "watch_for": "Tippler's Bane (Coprinopsis atramentaria, Tier B) -- eat fresh, skip alcohol for several days regardless of which inky cap it is",
     "citations": [],
-    "inat_taxon_name": "Coprinus comatus"
+    "inat_taxon_name": "Coprinus comatus",
+    "spore_print_color": "Black.",
+    "cap_size": "3-15 cm, oval to rounded-cylindrical (shaggy, shredded-scaly) when young, expanding to bell-shaped with age.",
+    "stem_size": "5-20 cm long x 1-2 cm thick, smooth, white, tapering toward the apex.",
+    "flesh_characteristics": "White, soft flesh; the defining trait is deliquescence -- gills progress from white to pinkish to black and self-digest (\"melt\") into black inky liquid as the cap ages, which is why it must be eaten young/fresh."
   },
   {
     "id": "honey-mushroom",
@@ -887,8 +1018,17 @@
     "cannot_determine_from_photo": null,
     "distinguishing_test": null,
     "watch_for": "Deadly Galerina -- see lookalike pairs table, spore print every time",
-    "citations": [],
-    "inat_taxon_name": "Armillaria mellea"
+    "citations": [
+      {
+        "title": "Armillaria solidipes - Honey mushroom (Beaty Biodiversity Museum, UBC)",
+        "url": "https://explore.beatymuseum.ubc.ca/mushroomsup/A_solidipes.html"
+      }
+    ],
+    "inat_taxon_name": "Armillaria mellea",
+    "spore_print_color": "White (both A. mellea and A. solidipes).",
+    "cap_size": "A. mellea: 3.5-12 cm across; A. solidipes: similar, 5-12 cm, rounded-conical when young, flattening with age.",
+    "stem_size": "A. mellea: 7-20 cm long x 0.5-2 cm thick, tapering at the base, typically clustered; A. solidipes: 5-15 cm long x 0.7-1.5 cm wide, widest at the base then ending abruptly (helps distinguish it from A. mellea's tapered base).",
+    "flesh_characteristics": "A. mellea flesh is whitish to very slightly pinkish and unchanging when sliced; field guides describe A. solidipes similarly as pale and non-staining."
   },
   {
     "id": "giant-puffball",
@@ -906,8 +1046,17 @@
     "cannot_determine_from_photo": null,
     "distinguishing_test": null,
     "watch_for": "Amanita button stage -- see lookalike pairs table, cut every puffball top to bottom before eating, no exceptions",
-    "citations": [],
-    "inat_taxon_name": "Calvatia gigantea"
+    "citations": [
+      {
+        "title": "Calvatia booniana (MushroomExpert.Com)",
+        "url": "https://www.mushroomexpert.com/calvatia_booniana.html"
+      }
+    ],
+    "inat_taxon_name": "Calvatia gigantea",
+    "spore_print_color": "Not a traditional print -- spore mass (gleba) is white when young, turning olive-yellow/greenish then olive-brown to brown as it matures into powdery spore dust.",
+    "cap_size": "Calvatia gigantea: 20-30+ cm across (exceptional specimens to ~50+ cm). C. booniana (western species): 15-30 cm across, occasionally over 60 cm.",
+    "stem_size": "No true stem in either species. C. gigantea has a short thick cord (to ~6 cm) anchoring it to the ground; C. booniana likewise lacks a stem/stalk.",
+    "flesh_characteristics": "Interior is solid white, soft/fleshy, and homogeneous (no cap-gill-stem differentiation) when young and edible -- must be checked by cutting in half to confirm pure white flesh throughout with no internal mushroom shape (rules out immature Amanita \"eggs\"). Turns yellow-green then olive-brown/brown powdery spore mass with age."
   },
   {
     "id": "common-puffballs",
@@ -926,7 +1075,11 @@
     "distinguishing_test": null,
     "watch_for": "Same cut-test rule as giant puffball",
     "citations": [],
-    "inat_taxon_name": "Lycoperdon perlatum"
+    "inat_taxon_name": "Lycoperdon perlatum",
+    "spore_print_color": "Olive-brown at maturity (spore mass color, not a deposited print in the gilled-mushroom sense).",
+    "cap_size": "2-7 cm wide, 3-8 cm high; pear/top-shaped fruitbody covered in small conical spines/granules that often rub off leaving a netted pattern.",
+    "stem_size": "No true stem. Has a distinct sterile base (a narrower, chambered lower portion that stays spore-free) attached to thin white rhizomorphs (root-like cords).",
+    "flesh_characteristics": "Interior white, firm/spongy, and homogeneous when young and edible (must be cut to confirm pure white flesh throughout); the upper spore-bearing part turns yellowish then olive-brown as it matures, while the sterile base stays yellowish-brown."
   },
   {
     "id": "black-trumpet",
@@ -944,13 +1097,22 @@
     "cannot_determine_from_photo": null,
     "distinguishing_test": null,
     "watch_for": "Low dangerous-lookalike risk; easy to miss visually (camouflages in leaf litter) rather than misidentify",
-    "citations": [],
-    "inat_taxon_name": "Craterellus cornucopioides"
+    "citations": [
+      {
+        "title": "Craterellus cornucopioides / calicornucopioides - California Fungi (MykoWeb)",
+        "url": "https://www.mykoweb.com/CAF/species/Craterellus_calicornucopioides.html"
+      }
+    ],
+    "inat_taxon_name": "Craterellus cornucopioides",
+    "spore_print_color": "White to creamy (pale yellowish).",
+    "cap_size": "Whole trumpet-shaped fruitbody 3-5 cm wide, 5-9 cm tall.",
+    "stem_size": "No true stem and no cap/stem differentiation -- tubular becoming deeply vase/trumpet-shaped and hollow its entire length; the base simply narrows rather than forming a separate stalk.",
+    "flesh_characteristics": "Thin, brittle flesh, blackish-gray to brownish-black throughout; no notable bruising, staining, or latex. Mild taste, nondescript odor fresh but can become sweet/fragrant when dried."
   },
   {
     "id": "lions-mane",
     "common_name": "Lion's mane",
-    "scientific_name": "Hericium erinaceus / western H. abietis",
+    "scientific_name": "Hericium erinaceus",
     "tier": "C",
     "severity": "common",
     "toxin_syndrome": null,
@@ -963,8 +1125,17 @@
     "cannot_determine_from_photo": null,
     "distinguishing_test": null,
     "watch_for": "Low risk; distinctive form",
-    "citations": [],
-    "inat_taxon_name": "Hericium erinaceus"
+    "citations": [
+      {
+        "title": "Hericium erinaceus - California Fungi (MykoWeb)",
+        "url": "https://www.mykoweb.com/CAF/species/Hericium_erinaceus.html"
+      }
+    ],
+    "inat_taxon_name": "Hericium erinaceus",
+    "spore_print_color": "White.",
+    "cap_size": "Overall mass roughly 10-20 cm broad -- a single, unbranched, rounded clump of long (often >1 cm) downward-hanging spines, distinct from the branched, multi-clustered structure of Bear's Head (H. abietis, a separate entry in this database).",
+    "stem_size": "No true stem. Attaches to wood (typically hardwood wounds/dead wood) via a short, unbranched, sometimes rooting stalk-like base.",
+    "flesh_characteristics": "Whitish, tough-fibrous flesh with a mild taste and odor; no notable bruising or staining."
   },
   {
     "id": "candy-cap",
@@ -982,8 +1153,17 @@
     "cannot_determine_from_photo": null,
     "distinguishing_test": null,
     "watch_for": "Confirm the latex and smell -- other small orange Lactarius lack the maple-syrup signature",
-    "citations": [],
-    "inat_taxon_name": "Lactarius rubidus"
+    "citations": [
+      {
+        "title": "Candy Cap Complex - California Fungi (MykoWeb)",
+        "url": "https://www.mykoweb.com/articles/CandyCapComplex.html"
+      }
+    ],
+    "inat_taxon_name": "Lactarius rubidus",
+    "spore_print_color": "Sources disagree slightly: MykoWeb reports cream-buff; MushroomExpert reports pale yellow to whitish.",
+    "cap_size": "Sources disagree: MykoWeb gives 1.5-4.5 cm broad; MushroomExpert gives 2-8 cm broad (convex becoming flat or shallowly vase-shaped, dry/minutely wrinkled-bumpy, cinnamon/burnt-orange color).",
+    "stem_size": "MykoWeb: 2-5 cm long x 0.4-1.0 cm thick. MushroomExpert: 2-7 cm long, up to 1.5 cm thick; stem is chalky/brittle and snaps cleanly.",
+    "flesh_characteristics": "Exudes a thin, watery-white to near-colorless latex when cut -- scant, not copious or brightly colored -- that does NOT change color on air exposure (unlike many other Lactarius). Key diagnostic is a faint maple-syrup/burnt-sugar odor, weak fresh but intensifying strongly on drying."
   },
   {
     "id": "blewit",
@@ -1001,8 +1181,17 @@
     "cannot_determine_from_photo": null,
     "distinguishing_test": null,
     "watch_for": "Cortinarius species can share purple-brown tones -- confirm spore print (pinkish-tan, not rusty-brown) and lack of a cobweb veil before treating as blewit",
-    "citations": [],
-    "inat_taxon_name": "Clitocybe nuda"
+    "citations": [
+      {
+        "title": "Lepista (Clitocybe) nuda, Wood Blewit - First Nature",
+        "url": "https://www.first-nature.com/fungi/lepista-nuda.php"
+      }
+    ],
+    "inat_taxon_name": "Clitocybe nuda",
+    "spore_print_color": "Pale pink to pinkish-buff.",
+    "cap_size": "Sources vary: MushroomExpert gives 3-12 cm across; First Nature gives 6-15 cm. Convex with an inrolled margin when young, becoming broadly convex to flat, purplish-lilac fading with age.",
+    "stem_size": "MushroomExpert: 4-6 cm long x 2-2.5 cm thick. First Nature: 5-10 cm long x 1.5-2.5 cm thick, often with a swollen/bulbous base.",
+    "flesh_characteristics": "Thick, soft, purplish-lilac to whitish flesh that does NOT change color when sliced. Fragrant, sweet/aniseed-like odor is a key diagnostic trait. Must be well cooked -- undercooked or raw specimens have caused GI upset in some people."
   },
   {
     "id": "fried-chicken-mushroom",
@@ -1020,8 +1209,17 @@
     "cannot_determine_from_photo": null,
     "distinguishing_test": null,
     "watch_for": "Moderate lookalike risk within Lyophyllum/Tricholoma-adjacent genera -- confirm cluster habit and gill attachment",
-    "citations": [],
-    "inat_taxon_name": "Lyophyllum decastes"
+    "citations": [
+      {
+        "title": "Fried Chicken Mushrooms: Lyophyllum decastes - Forager | Chef",
+        "url": "https://foragerchef.com/fried-chicken-mushrooms/"
+      }
+    ],
+    "inat_taxon_name": "Lyophyllum decastes",
+    "spore_print_color": "Pure white.",
+    "cap_size": "3-12 cm across per cap; grows in dense fused clusters of many caps, grayish-brown, often with wavy/irregular overlapping margins.",
+    "stem_size": "5-10 cm long, up to 2 cm thick; multiple stems fused together at the base within a cluster, firm/dense and \"squeaky\" when cut.",
+    "flesh_characteristics": "White, firm flesh that does not change color or stain when cut or exposed to air. Texture is distinctively dense, tender, and squeaky/string-cheese-like rather than mealy or slimy (unlike similar-looking elm oysters)."
   },
   {
     "id": "maitake",
@@ -1040,7 +1238,11 @@
     "distinguishing_test": null,
     "watch_for": "Low risk; distinctive form, but uncommon enough here that a positive claim deserves extra scrutiny of the base/substrate",
     "citations": [],
-    "inat_taxon_name": "Grifola frondosa"
+    "inat_taxon_name": "Grifola frondosa",
+    "spore_print_color": "White.",
+    "cap_size": "Whole rosette cluster 15-40 cm across, 10-30 cm high; individual overlapping fan/spoon-shaped caps 3-14 cm across, grayish-brown.",
+    "stem_size": "No single true stem -- a branched system of thick, whitish, tough stalks fuses toward a common base at the tree/root, each branch terminating in one cap.",
+    "flesh_characteristics": "Firm, white flesh, unchanging when sliced or exposed to air; mild pleasant odor and taste, no bruising, staining, or latex reaction."
   },
   {
     "id": "coral-fungi",
@@ -1058,8 +1260,17 @@
     "cannot_determine_from_photo": null,
     "distinguishing_test": null,
     "watch_for": "Genus-level caution: some Ramaria species cause GI upset; needs species-level confirmation before eating, not a coral fungus = fine assumption",
-    "citations": [],
-    "inat_taxon_name": "Ramaria"
+    "citations": [
+      {
+        "title": "Ramaria formosa (MushroomExpert.Com)",
+        "url": "https://www.mushroomexpert.com/ramaria_formosa.html"
+      }
+    ],
+    "inat_taxon_name": "Ramaria",
+    "spore_print_color": "Yellowish to orangish-yellow, varying by species.",
+    "cap_size": "No true cap -- erect, branched/coral-shaped fruiting bodies, typically about 4-20 cm tall x 2-15 cm wide overall (varies by species).",
+    "stem_size": "No true stipe; a basal stalk roughly 2-3+ cm long x to 2 cm wide, whitish and finely fuzzy, from which the coral-like branches arise.",
+    "flesh_characteristics": "Brittle flesh colored white to pink/red/orange depending on species (no latex, unlike milk caps); some species such as R. formosa have bitter flesh that becomes chalk-like when dried, and several Ramaria species cause GI upset, so species-level ID matters before consumption."
   },
   {
     "id": "milk-caps",
@@ -1077,8 +1288,17 @@
     "cannot_determine_from_photo": null,
     "distinguishing_test": null,
     "watch_for": "Large, complex genus with both good edibles and GI-upsetting species -- latex color/staining reaction and taste (bitter vs mild) separate them, needs species-level work",
-    "citations": [],
-    "inat_taxon_name": "Lactarius"
+    "citations": [
+      {
+        "title": "LACTARIUS in the Pacific Northwest - Pacific Northwest Key Council",
+        "url": "https://www.svims.ca/council/Lactar.htm"
+      }
+    ],
+    "inat_taxon_name": "Lactarius",
+    "spore_print_color": "White to pale cream/buff, sometimes yellowish; thin deposits look white while thicker deposits skew more yellow.",
+    "cap_size": "Typically 2-15 cm across, though the genus overall spans roughly 0.5 cm to over 20 cm depending on species.",
+    "stem_size": "Typically about 2-11 cm long x 0.3-3 cm thick.",
+    "flesh_characteristics": "Cutting the flesh releases a latex (\"milk\") that is white or colored and may stay unchanged or shift color (e.g. turn yellow) within seconds to minutes of air exposure -- a key diagnostic trait. Use strong caution: toxic Lactarius and Russula species exist, latex should never be swallowed for identification, and any species with yellow-changing latex, lilac-staining flesh, or a strongly bitter/peppery taste should be avoided as food."
   },
   {
     "id": "suillus-group",
@@ -1096,8 +1316,17 @@
     "cannot_determine_from_photo": null,
     "distinguishing_test": null,
     "watch_for": "Generally low dangerous-lookalike risk; peel the sticky cap skin, some people report GI sensitivity, handling can cause contact dermatitis in a minority of people",
-    "citations": [],
-    "inat_taxon_name": "Suillus"
+    "citations": [
+      {
+        "title": "Suillus lakei - California Fungi (MykoWeb)",
+        "url": "https://www.mykoweb.com/CAF/species/Suillus_lakei.html"
+      }
+    ],
+    "inat_taxon_name": "Suillus",
+    "spore_print_color": "Brownish-orange to orangish/cinnamon-brown.",
+    "cap_size": "Roughly 5-12 cm across.",
+    "stem_size": "About 3-6 cm long x 1-2.5 cm thick, typically equal-width; some species (e.g. S. luteus) also bear a partial veil/ring on the stem.",
+    "flesh_characteristics": "The cap cuticle is diagnostically slimy/glutinous when moist (a hallmark genus trait, often peeled off before eating); flesh is whitish to yellow, sometimes staining pinkish when sliced, and the stem base can turn bluish-green when cut in some species (e.g. S. lakei)."
   },
   {
     "id": "wood-ear",
@@ -1115,8 +1344,17 @@
     "cannot_determine_from_photo": null,
     "distinguishing_test": null,
     "watch_for": "Not dangerous, but has a documented mild blood-thinning effect -- worth a mention for anyone on anticoagulants, per NAMA",
-    "citations": [],
-    "inat_taxon_name": "Auricularia"
+    "citations": [
+      {
+        "title": "Wood Ear (Tree Ear) - Missouri Department of Conservation Field Guide",
+        "url": "https://mdc.mo.gov/discover-nature/field-guide/wood-ear-tree-ear"
+      }
+    ],
+    "inat_taxon_name": "Auricularia",
+    "spore_print_color": "White.",
+    "cap_size": "Ear/cup-shaped fruiting body about 2.5-15 cm across.",
+    "stem_size": "No true stem/stipe; attaches directly to dead or decaying wood at a central or lateral point.",
+    "flesh_characteristics": "Thin, gelatinous, rubbery flesh when fresh and moist, with fine hairs giving the lower surface a whitish bloom; dries hard, shrinks, and darkens to near-black, then rehydrates when wetted again."
   },
   {
     "id": "turkey-tail",
@@ -1135,7 +1373,11 @@
     "distinguishing_test": null,
     "watch_for": "Not a prime edible (used dried for tea/extracts); low risk, but tough and inedible fresh",
     "citations": [],
-    "inat_taxon_name": "Trametes versicolor"
+    "inat_taxon_name": "Trametes versicolor",
+    "spore_print_color": "Whitish.",
+    "cap_size": "Individual caps about 2-8 cm across x 1-4 cm deep x 1-2 mm thick, usually fused into overlapping rosettes or clusters.",
+    "stem_size": "No true stem; caps are bracket/fan-shaped and sessile, attaching directly to logs/stumps and often fusing with neighboring caps.",
+    "flesh_characteristics": "Thin, tough, leathery (not brittle) flesh, whitish, with a distinctive very thin black line visible in cross-section separating the colorful cap surface from the flesh."
   },
   {
     "id": "western-reishi",
@@ -1154,7 +1396,11 @@
     "distinguishing_test": null,
     "watch_for": "Not a prime edible (used dried, medicinal-style); low risk, distinctive form",
     "citations": [],
-    "inat_taxon_name": "Ganoderma oregonense"
+    "inat_taxon_name": "Ganoderma oregonense",
+    "spore_print_color": "Reddish brown.",
+    "cap_size": "Large bracket, roughly 10-50+ cm across x 5-15+ cm deep.",
+    "stem_size": "Usually no true stem (sessile, laterally attached to the host tree); when a stem-like base is present it is short/stubby, lacquered, and brownish-red to reddish-brown.",
+    "flesh_characteristics": "Whitish to creamy flesh, tough but not woody, lacking concentric growth-zone banding; turns black almost instantly with a KOH chemical spot test (a lab reagent test, not a natural bruise) -- no notable natural bruising on handling."
   },
   {
     "id": "meadow-mushroom",
@@ -1173,6 +1419,230 @@
     "distinguishing_test": null,
     "watch_for": "Destroying Angel / Death Cap -- see lookalike pairs table, single most important Agaricus check: gills must never be white",
     "citations": [],
-    "inat_taxon_name": "Agaricus campestris"
+    "inat_taxon_name": "Agaricus campestris",
+    "spore_print_color": "Dark brown to blackish-brown. Pink-to-chocolate-brown gill maturation, documented elsewhere in this database, remains the primary Agaricus-vs-Amanita field check.",
+    "cap_size": "About 5-10 cm across, convex to broadly convex, occasionally nearly flat.",
+    "stem_size": "About 3-6 cm long x 1-2 cm thick, roughly equal width, tapering slightly at the base; A. campestris has a thin, often fleeting ring, while A. arvensis tends to have a more persistent, sometimes double ring.",
+    "flesh_characteristics": "White throughout, does not change color when cut or bruised in A. campestris -- a useful contrast to toxic yellow-staining lookalikes such as Agaricus xanthodermus, which discolor yellow at the cap margin/stem base and smell of phenol/iodine when cut (see The Prince entry for the full bruise-and-smell test against yellow stainer)."
+  },
+  {
+    "id": "aborted-entoloma",
+    "common_name": "Aborted Entoloma",
+    "scientific_name": "Entoloma abortivum",
+    "tier": "C",
+    "severity": "common",
+    "toxin_syndrome": null,
+    "effect": null,
+    "key_features": "Almost always collected in its parasitized 'aborted' form: irregular, lumpy, brain-like or potato-like white-to-pinkish-gray masses of solid tissue, 2-10 cm across, with no true cap, gills, or stem. These are malformed Armillaria mellea (honey mushroom) fruiting bodies that have been invaded and taken over by Entoloma abortivum mycelium -- not a failed entoloma fruit body. The normal (non-aborted) form is a separate, unparasitized gilled mushroom: steel-gray convex cap 2-8 cm, gills pale gray aging to pink, farinaceous (fresh-meal/cucumber) odor, on a slender gray stem 2-8 cm. Both forms typically fruit together in the same patch, since both are triggered by the same Armillaria activity. Cut in half, the aborted form is solid and marbled white-to-pinkish throughout, not hollow or spongy.",
+    "habitat_substrate": "Grows on the ground or on well-decayed wood/leaf litter in hardwood forests, always in the vicinity of Armillaria mellea (honey mushroom) activity, since the aborted form is a physical product of Entoloma parasitizing Armillaria.",
+    "season_west_coast": "Late summer through fall (August-November) in the Pacific Northwest, tracking Armillaria fruiting.",
+    "range_notes": "Widespread in eastern North America and also documented in the Pacific Northwest; look for it wherever honey mushrooms (Armillaria) are fruiting nearby, since the two are ecologically linked.",
+    "spore_print_color": "Pink (salmon-pink), diagnostic for the normal gilled form; the aborted lumps do not produce spores and cannot be spore-printed.",
+    "cap_size": "Normal form: 2-8 cm cap diameter. Aborted form: irregular masses 2-10 cm across with no defined cap.",
+    "stem_size": "Normal form: 2-8 cm long, 0.5-1.5 cm thick. Aborted form: no true stem.",
+    "flesh_characteristics": "Aborted form is dense, firm, and solid throughout when cut, whitish to pinkish-gray with marbled streaking, not hollow, watery, or crumbly.",
+    "watch_for": "Only harvest the aborted (white lumpy) form if you can also find the normal gray-capped, pink-spored gilled form of Entoloma abortivum fruiting in the same patch nearby, confirming the parasitic pairing. Cut every lump in half: it must be solid and firm throughout (never hollow, chalky, or crumbly-dry inside), since old or rotting Armillaria clusters and other decaying fungal masses can superficially resemble aborted entoloma.",
+    "citations": [
+      {
+        "title": "Entoloma abortivum (MushroomExpert.Com)",
+        "url": "https://www.mushroomexpert.com/entoloma_abortivum.html"
+      },
+      {
+        "title": "Entoloma abortivum - Midwest American Mycological Information",
+        "url": "https://midwestmycology.org/entoloma-abortivum/"
+      }
+    ],
+    "inat_taxon_name": "Entoloma abortivum",
+    "cannot_determine_from_photo": null,
+    "confused_with": null,
+    "distinguishing_test": null
+  },
+  {
+    "id": "bears-head-tooth",
+    "common_name": "Bear's Head Tooth",
+    "scientific_name": "Hericium abietis",
+    "tier": "C",
+    "severity": "common",
+    "toxin_syndrome": null,
+    "effect": null,
+    "key_features": "Large, showy, branched coral-like fruiting body, white to creamy or pale yellowish-salmon in color, made of multiple thick branches radiating from a common base, with each branch tip hung with clusters of soft, tooth-like spines 0.5-2.5 cm long. Unlike a solid single mass, the branching structure gives it an open, many-armed look. No cap, gills, or pores -- entirely spine-bearing. Bruises and ages to yellowish or brownish tones.",
+    "habitat_substrate": "Saprobic on dead or dying conifer wood, especially Douglas-fir, true fir, hemlock, and spruce logs, stumps, and standing dead trunks; causes a white rot.",
+    "season_west_coast": "Fall, typically starting after the autumn rains begin (September-November), sometimes into early winter in mild years.",
+    "range_notes": "Pacific Northwest specialist -- common in old-growth and mature conifer forests of coastal and Cascade-range Oregon, Washington, and north into British Columbia; less common but present in north Idaho and west Montana conifer forests.",
+    "spore_print_color": "White.",
+    "cap_size": "No cap; overall fruiting body 10-75 cm across, occasionally larger.",
+    "stem_size": "No true stem; attaches directly to wood via a thick branching base.",
+    "flesh_characteristics": "White, soft, spongy-fibrous flesh throughout the branches; spines are soft and brittle, breaking cleanly rather than tearing stringy.",
+    "watch_for": "Distinguish from Lion's Mane (Hericium erinaceus, a separate entry in this database): Lion's Mane grows on hardwood, forms a single dense, unbranched, roughly ball- or tongue-shaped clump with all its long spines radiating from one central point, and is rare to absent in most West Coast conifer forest. If the fruiting body clearly has multiple separate branches each tipped with its own cluster of teeth, and it's growing on conifer wood, it is Bear's Head, not Lion's Mane.",
+    "citations": [
+      {
+        "title": "Hericium abietis - California Fungi (MykoWeb)",
+        "url": "https://www.mykoweb.com/CAF/species/Hericium_abietis.html"
+      }
+    ],
+    "inat_taxon_name": "Hericium abietis",
+    "cannot_determine_from_photo": null,
+    "confused_with": null,
+    "distinguishing_test": null
+  },
+  {
+    "id": "velvet-foot",
+    "common_name": "Velvet Foot (wild Enokitake)",
+    "scientific_name": "Flammulina velutipes",
+    "tier": "C",
+    "severity": "common",
+    "toxin_syndrome": null,
+    "effect": null,
+    "key_features": "Small to medium mushroom with a smooth, sticky/slimy when wet, orange-brown to dark orangish-tan cap 1-6 cm across, paling toward the margin. Gills are white to pale yellowish, attached, moderately spaced. The stem is the key feature: firm, tough, and cartilaginous, whitish and smooth near the top but developing a distinctive dark brown to blackish, fine velvety fuzz from the base upward as it ages. No ring on the stem. Grows in dense clusters fused at the base on wood.",
+    "habitat_substrate": "Saprobic, growing in tight clusters on dead or dying hardwood -- stumps, logs, and buried roots (cottonwood, alder, willow, maple, box elder are common West Coast hosts).",
+    "season_west_coast": "Distinctly cold-season: late fall through winter into early spring (roughly November-March), often fruiting after frost and even pushing up through light snow.",
+    "range_notes": "Widespread across Oregon, Washington, California, north Idaho, and west Montana wherever suitable dead hardwood is present, especially in riparian areas with cottonwood and willow.",
+    "spore_print_color": "White.",
+    "cap_size": "1-6 cm across.",
+    "stem_size": "2-9 cm long, 0.3-1 cm thick, tough and cartilaginous, darkening and becoming velvety-fuzzy from the base up.",
+    "flesh_characteristics": "Thin, pliable, whitish flesh in the cap; stem is notably tougher and more fibrous than the cap, often trimmed away and discarded in the kitchen.",
+    "watch_for": "This species fruits on wood in cold weather, the same time and substrate where the deadly Galerina marginata can also appear as small brown mushrooms. Do NOT rely on color or season to tell them apart -- take a spore print: Flammulina velutipes prints white, while Galerina marginata prints rusty brown to dull cinnamon-brown. This is the decisive, field-checkable test. Also check the stem: Galerina typically has a thin, fragile, powdery-looking stem with a delicate membranous ring partway up and lacks the dark velvety fuzz at the base; Flammulina's stem is tough/cartilaginous, ringless, and develops the visible dark velvet coating from the base upward. Never eat any small brown wood-growing mushroom without a confirmed white spore print and the velvety dark stem base present.",
+    "citations": [
+      {
+        "title": "Flammulina velutipes (MushroomExpert.Com)",
+        "url": "https://www.mushroomexpert.com/flammulina_velutipes.html"
+      },
+      {
+        "title": "Flammulina velutipes, Velvet Shank mushroom - First Nature",
+        "url": "https://www.first-nature.com/fungi/flammulina-velutipes.php"
+      }
+    ],
+    "inat_taxon_name": "Flammulina velutipes",
+    "cannot_determine_from_photo": null,
+    "confused_with": null,
+    "distinguishing_test": null
+  },
+  {
+    "id": "fairy-ring-mushroom",
+    "common_name": "Fairy Ring Mushroom",
+    "scientific_name": "Marasmius oreades",
+    "tier": "C",
+    "severity": "common",
+    "toxin_syndrome": null,
+    "effect": null,
+    "key_features": "Small mushroom, pale tan to buff or reddish-tan (fading paler when dry, darker when wet), bell-shaped to broadly convex cap 1-5 cm with a low central bump, smooth, not sticky. Gills are white to pale tan, notably widely spaced (\"distant\"), and free or only narrowly attached -- not crowded and not running down the stem. The stem is thin but unmistakably tough, fibrous, and pliant/rubbery rather than brittle -- it bends and twists like a piece of string instead of snapping cleanly. Mild smell, sometimes faintly almond-like or hay-like. Commonly, but not always, arranged in arcs or rings in turf.",
+    "habitat_substrate": "Saprobic in grass -- lawns, pastures, meadows, and grassy roadsides and dunes -- never on wood. Frequently forms rings or arcs of darker green, faster-growing grass with mushrooms along the ring edge, though the ring pattern can be partial or absent.",
+    "season_west_coast": "Late spring through fall (May-November) on the West Coast, and nearly year-round in mild coastal California climates after rain or irrigation.",
+    "range_notes": "Common and widespread throughout Oregon, Washington, and California lawns, parks, and grasslands at all elevations where turf grows; present but less frequently reported in north Idaho and west Montana.",
+    "spore_print_color": "White.",
+    "cap_size": "1-5 cm across.",
+    "stem_size": "2-8 cm long, 1.5-6 mm thick, tough and pliant, pale, same color as cap or lighter.",
+    "flesh_characteristics": "Cap flesh is thin and can dry out and revive with rehydration (marcescent), a trait fairly unusual among gilled mushrooms; stem flesh is dense, wiry, and fibrous rather than watery or brittle.",
+    "watch_for": "Lawns and fairy rings can also host toxic species growing in the same ring or nearby -- notably Chlorophyllum molybdites (green-spored parasol), Clitocybe dealbata (ivory funnel, contains muscarine), and various small toxic Inocybe species. Do not identify by ring shape or lawn habitat alone. Run this combined field test: (1) bend a stem -- it must be tough and pliant, twisting like a string rather than snapping like a carrot; (2) check gill attachment and spacing -- gills should be pale cream, distinctly widely spaced, and free or barely attached, never crowded or decurrent; (3) take a spore print -- it must be white (a pink, brown, or green print rules this species out); (4) smell -- should be mild, not sweet, foul, or mealy-rancid. Treat every mushroom in the ring individually; do not assume the whole ring is one species.",
+    "citations": [
+      {
+        "title": "Marasmius oreades (MushroomExpert.Com)",
+        "url": "https://www.mushroomexpert.com/marasmius_oreades.html"
+      },
+      {
+        "title": "Marasmius oreades - California Fungi (MykoWeb)",
+        "url": "https://www.mykoweb.com/CAF/species/Marasmius_oreades.html"
+      }
+    ],
+    "inat_taxon_name": "Marasmius oreades",
+    "cannot_determine_from_photo": null,
+    "confused_with": null,
+    "distinguishing_test": null
+  },
+  {
+    "id": "oregon-white-truffle",
+    "common_name": "Oregon White Truffle",
+    "scientific_name": "Tuber oregonense",
+    "tier": "C",
+    "severity": "common",
+    "toxin_syndrome": null,
+    "effect": null,
+    "key_features": "Subterranean (hypogeous) fungus -- an irregularly round to potato-shaped truffle, typically marble- to golf-ball-sized, found entirely underground and never producing an above-ground mushroom. Immature specimens are whitish to beige with faint yellowish, olive, or reddish-brown tints; mature specimens develop a reddish-brown, finely fissured surface. Cut in half, the interior (gleba) is firm -- like a pencil eraser -- and white with fine marbling when young, becoming smoky brown with prominent white marbling as it matures. A ripe truffle develops a strong garlic-spice-cheese aroma 1-3 days after harvest.",
+    "habitat_substrate": "Ectomycorrhizal specifically with Douglas-fir (Pseudotsuga menziesii); found in the root zone of young to early-mature Douglas-fir stands, especially plantations on former pasture or agricultural land, from sea level to about 2,000 feet elevation.",
+    "season_west_coast": "October through February, the classic Oregon commercial truffle season, with harvest typically peaking December-January.",
+    "range_notes": "West side of the Cascade Range and coastal mountain ranges from northern California through western Oregon and Washington into southern British Columbia; the Willamette Valley and surrounding Douglas-fir plantations are the commercial heartland.",
+    "spore_print_color": "Not applicable -- truffles are hypogeous and do not release spores into the air for a print.",
+    "cap_size": "Not applicable (no cap); whole truffle body typically 1.5-5 cm diameter, marble to golf-ball sized.",
+    "stem_size": "Not applicable -- no stem, entirely a rounded underground body.",
+    "flesh_characteristics": "Firm and solid, never spongy, hollow, or powdery when good; interior is marbled white against a brown-to-tan background at maturity, with a strong pungent aroma once ripe.",
+    "watch_for": "This species cannot be reliably identified from a photograph the way an above-ground mushroom can, because it is found by smell and by raking through soil near Douglas-fir roots, not by sight. Positive identification relies on cutting the truffle open to confirm firm, solid, marbled flesh (never spongy, squishy, hollow, chalky, or powdery -- those textures indicate an unripe, rotten, or non-edible false truffle) plus the characteristic ripe aroma. If new to truffle hunting, go out with, or get confirmation from, an experienced local forager or a mycological society before eating anything dug up as a 'truffle.'",
+    "citations": [
+      {
+        "title": "Oregon Native Edible Truffles (EM 9369) - OSU Extension Service",
+        "url": "https://extension.oregonstate.edu/catalog/pub/em-9369-oregon-native-edible-truffles"
+      },
+      {
+        "title": "Tuber oregonense - California Fungi (MykoWeb)",
+        "url": "https://www.mykoweb.com/CAF/species/Tuber_oregonense.html"
+      }
+    ],
+    "inat_taxon_name": "Tuber oregonense",
+    "cannot_determine_from_photo": null,
+    "confused_with": null,
+    "distinguishing_test": null
+  },
+  {
+    "id": "white-chanterelle",
+    "common_name": "White Chanterelle",
+    "scientific_name": "Cantharellus subalbidus",
+    "tier": "C",
+    "severity": "common",
+    "toxin_syndrome": null,
+    "effect": null,
+    "key_features": "Chunky, dense chanterelle that is whitish to pale cream overall rather than golden-orange, distinguishing it from the similar and often co-occurring Pacific Golden Chanterelle. Cap 5-10 cm, broadly convex to flat, developing a central depression and becoming irregularly wavy-lobed with age, dry, whitish, bruising and aging to yellowish-orange where handled or old. False gills (blunt, forked, vein-like ridges, not true bladed gills) run down the stem, white matching the cap, also bruising yellowish-orange. Whole mushroom is notably firm, dense, and heavy for its size compared to other chanterelles.",
+    "habitat_substrate": "Ectomycorrhizal with conifers, especially Douglas-fir; found on the ground, solitary to scattered, in mature and old-growth conifer forest, often partially hidden under duff or moss.",
+    "season_west_coast": "Fall into early winter (September-December), overlapping with but sometimes running slightly later than golden chanterelle season.",
+    "range_notes": "Pacific Northwest and northern California specialist, found in the same old-growth and mature conifer forest belt as the Pacific Golden Chanterelle, from the Cascade and Coast ranges of Washington and Oregon south into northern California.",
+    "spore_print_color": "Pale yellowish to cream (very pale, similar to other Cantharellus species).",
+    "cap_size": "5-10 cm across.",
+    "stem_size": "2-5 cm long, 1-2.5 cm thick, solid, tapering toward the base.",
+    "flesh_characteristics": "Thick, firm, dense white flesh throughout, solid (not hollow), sometimes yellowing slightly where cut or bruised; noticeably meatier and heavier-feeling than golden chanterelles of similar size.",
+    "watch_for": "Confirm true chanterelle structure before eating: the underside should show blunt, shallow, forked, vein-like false gills that are not true bladed gills and do not separate cleanly from the cap flesh. The whitish color and forking false-gill pattern together separate this species from the golden-orange Pacific Golden Chanterelle and from true gilled lookalikes.",
+    "citations": [
+      {
+        "title": "Cantharellus subalbidus (MushroomExpert.Com)",
+        "url": "https://www.mushroomexpert.com/cantharellus_subalbidus.html"
+      },
+      {
+        "title": "Cantharellus subalbidus - California Fungi (MykoWeb)",
+        "url": "https://www.mykoweb.com/CAF/species/Cantharellus_subalbidus.html"
+      }
+    ],
+    "inat_taxon_name": "Cantharellus subalbidus",
+    "cannot_determine_from_photo": null,
+    "confused_with": null,
+    "distinguishing_test": null
+  },
+  {
+    "id": "the-prince",
+    "common_name": "The Prince",
+    "scientific_name": "Agaricus augustus",
+    "tier": "C",
+    "severity": "common",
+    "toxin_syndrome": null,
+    "effect": null,
+    "key_features": "Large, robust Agaricus, cap 9-20+ cm (up to 30 cm in exceptional specimens), starting rounded and expanding to broadly flat with a wavy margin, covered in radiating flat brown fibrillose scales over a whitish background, giving an overall golden-brown, shaggy-scaly appearance; bruises yellowish where handled, most noticeably at the cap margin, but only mildly compared to toxic look-alikes. The single most distinctive field character is smell: a strong, sweet almond-extract or marzipan odor. Gills are free from the stem, pale at first, maturing through pink to dark chocolate-brown to nearly black. Stem is substantial, smooth and white above the ring, with fine yellowish-brown fibrous scales below, and a large, flaring, hanging, double-edged ring with yellowish patches on the underside.",
+    "habitat_substrate": "Grows on the ground, saprobic/possibly weakly mycorrhizal, typically under or near conifers but also found in disturbed soil, along roadsides, gardens, and wood-chipped areas.",
+    "season_west_coast": "Summer through fall (June-November), often appearing earlier in the season than many other West Coast Agaricus species.",
+    "range_notes": "Widespread across Oregon, Washington, and California in conifer forest edges, landscaped areas, and disturbed ground; present in north Idaho and west Montana conifer country as well.",
+    "spore_print_color": "Dark brown to blackish-brown (chocolate brown).",
+    "cap_size": "9-20 cm, occasionally to 30 cm.",
+    "stem_size": "10-20 cm long (occasionally to 35 cm), 1.5-3 cm thick, with a large flaring ring.",
+    "flesh_characteristics": "Firm white flesh that bruises slowly and only mildly yellowish, most noticeable at the cap margin and near the very top of the stem; does not show a sudden, intense chrome-yellow reaction at the stem base the way the toxic yellow stainer does.",
+    "watch_for": "Before eating any wild Agaricus, always run the bruise-and-smell test to rule out the yellow stainer group (Agaricus xanthodermus and relatives), which cause GI upset in most people who eat them: cut the mushroom in half lengthwise through the base of the stem and (1) look at the stem base flesh specifically -- a rapid, bright chrome-yellow stain appearing within seconds at the very base of the stem indicates a yellow stainer and the mushroom should be discarded; (2) crush or smell the cut stem base -- a phenolic, inky, or iodine-like chemical smell (often intensifying when cooked) confirms yellow stainer, whereas The Prince smells distinctly of almond extract or marzipan. Both the base-specific chrome-yellow stain AND the phenolic/ink smell should be checked together; mild, slow yellowing elsewhere on the cap or flesh is normal for The Prince and is not by itself a red flag.",
+    "citations": [
+      {
+        "title": "Agaricus augustus - The Prince (Beaty Museum, UBC)",
+        "url": "https://explore.beatymuseum.ubc.ca/mushroomsup/A_augustus.html"
+      },
+      {
+        "title": "Agaricus augustus, The Prince mushroom - First Nature",
+        "url": "https://www.first-nature.com/fungi/agaricus-augustus.php"
+      }
+    ],
+    "inat_taxon_name": "Agaricus augustus",
+    "cannot_determine_from_photo": null,
+    "confused_with": null,
+    "distinguishing_test": null
   }
 ]

@@ -237,9 +237,10 @@ correct and complete answer here.
 
 9. **Pull reference photos for the live candidates** ->
    `references/photos_manifest.json`, keyed by species id. Each entry has
-   up to 3 real, research-grade, openly-licensed photos (url, license,
-   attribution, observation link) sourced from iNaturalist via
-   `scripts/fetch_photo_refs.py`. Actually fetch and look at the photo URLs
+   up to 3 real, openly-licensed photos (url, license, attribution,
+   observation link) sourced from iNaturalist and/or Mushroom Observer via
+   `scripts/fetch_photo_refs.py` -- each photo's `source` field says which.
+   Actually fetch and look at the photo URLs
    for the top few candidates -- particularly the Tier A ones in play --
    rather than reasoning from memory of what a species "usually" looks
    like. A small number of species have no open-licensed photo available
@@ -637,9 +638,9 @@ of them has killed someone who trusted it.
   reaches GitHub. Species corrections to `references/*.json` are NOT
   pushable this way, on purpose -- that stays a manual, human-reviewed
   commit given what's at stake if that data were ever wrong.
-- Species list is a deliberately scoped v1, expanded once already (44 ->
-  51 species, September 2026) and meant to keep growing (life-safety
-  species exhaustive for the region; common finds at 51 species total as
+- Species list is a deliberately scoped v1, expanded twice already (44 ->
+  51 -> 58 species, September 2026) and meant to keep growing (life-safety
+  species exhaustive for the region; common finds at 58 species total as
   of the last expansion, still not an exhaustive regional flora). Flag any
   species to add or correct in the repo directly -- this is meant to
   grow, and now it actually can without regenerating this whole file.
@@ -649,3 +650,12 @@ of them has killed someone who trusted it.
   rather than Mushroom Observer's own API). Photos and citations both got
   a strengthening pass alongside the species-count expansion above --
   neither is exhaustive, both are fine places to keep extending.
+- Tier C (edible/informational) entries carry four extra deep-ID fields
+  beyond the shared schema -- `spore_print_color`, `cap_size`, `stem_size`,
+  `flesh_characteristics` (bruising/latex/staining behavior) -- added in a
+  September 2026 research pass across MushroomExpert.com, MykoWeb, First
+  Nature, NAMA, and PNW Key Council trial keys. Step 8/9 below can surface
+  these fields alongside `watch_for` when a candidate is Tier C, same as
+  it already does for `key_features`/`habitat_substrate`/etc. Culinary
+  data (taste, prep, storage) was deliberately left out of this pass --
+  scoped to identification-relevant fields only.
