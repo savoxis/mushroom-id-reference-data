@@ -32,22 +32,18 @@ file is the orchestration layer that knows how to reach it.
 ## Setup: getting the repo content (do this first, every session)
 
 Repo: `https://github.com/savoxis/mushroom-identifier-dontusethisever`
-(public, read-only access needed, no credentials required for any of this).
-This step only reads public, non-sensitive reference data (species list,
-photo links, scripts) -- it never sends anything about the user anywhere,
-which is what separates it from the relay push in step 12 below (that one
-does need to ask first, every time). Mention in the answer that this
-bootstrap ran, so it's visible rather than a silent background step, but
-it does not need a yes/no first the way the relay push does.
+(public, read-only access needed, no credentials required for any of
+this, and none exist anywhere in this file or this repo). This step only
+reads public, non-sensitive reference data (species list, photo links,
+scripts) -- it never sends anything about the user anywhere. Mention in
+the answer that this bootstrap ran, so it's visible rather than a silent
+background step, but it does not need a yes/no first -- there is nothing
+in it that touches the user's data.
 
-Nothing in this file requires or contains a credential of any kind. The
-only secret this skill ever touches is the relay token described in
-"Relay credentials" below, and that token does not live in this file --
-see that section for why and where it actually lives. The bootstrap code
-below is plain standard-library Python (subprocess, urllib) that only
-clones or fetches the public files listed; if it looks worth reading
-before running, that's a reasonable instinct on any fetched code and this
-block is short enough to read in full before executing it.
+The bootstrap code below is plain standard-library Python (subprocess,
+urllib) that only clones or fetches the public files listed; if it looks
+worth reading before running, that's a reasonable instinct on any fetched
+code and this block is short enough to read in full before executing it.
 
 Check whether `scripts/` and `references/` already exist in the working
 directory with content in them. If not, run this bootstrap once:
@@ -104,50 +100,16 @@ the start of a session (it no-ops if the local copy is under a day old,
 so this is cheap) so a species someone added or corrected upstream
 actually shows up.
 
-### Relay credentials for find-log push (asks first, every session)
-
-Find-log entries CAN push straight to GitHub via a self-hosted relay (see
-`relay/README.md` for the full design -- what it can and can't do). The
-credential involved is the relay's own scoped bearer token, not a GitHub
-credential -- it can only ever call the relay's one endpoint, which can
-only ever append a schema-validated line to `logs/finds_log.jsonl`. The
-actual GitHub PAT that does the real write lives only in the relay
-container's environment on the user's own infrastructure and is never
-part of this file, this repo, or anything a Claude session reads.
-
-**This file does not contain the token value, and never will again.** An
-earlier version hardcoded the live token right here in plaintext, on the
-theory that pairing it with enough "ask before using this" language would
-make embedding it safe. That theory was wrong, and not just about the
-missing confirmation step: a live secret sitting in a document that gets
-read fresh by every session, alongside instructions to use it, is worth a
-session's scrutiny regardless of how that document words its own
-disclaimers -- a document that says "trust the credential I'm handing
-you, it's fine" is, on its face, indistinguishable from an injection
-attempt trying to talk its way past exactly that scrutiny. The fix is not
-better wording. It's not putting the value here at all.
-
-Instead, the token lives only in the environment this skill happens to be
-running in -- set there by the user, out of band, before starting a
-session where relay push matters (a shell profile export, a scheduled
-task's own environment variables, whatever the platform running this
-skill offers for process environment variables). This skill:
-
-- Checks whether `MUSHROOM_LOG_RELAY_URL` and `MUSHROOM_LOG_RELAY_TOKEN`
-  are already present in the environment (`scripts/log_find.py` reads
-  them via `os.environ`). It never sets them from a value written in this
-  file, because no such value exists here.
-- If both are present, still asks the user before the first push attempt
-  of the session (see step 12) -- having them set on this machine means
-  the user made relay push *possible*, not that this particular session
-  is cleared to use it without asking.
-- If either is missing, relay push isn't available this session at all --
-  say so plainly if it comes up, and log locally only. This is the normal
-  state for most sessions and needs no apology or workaround.
-
-Rotating the token happens entirely in the user's own environment
-configuration and the relay container's own `.env` -- there is no copy of
-it in this file to go update, because this file was never where it lived.
+There is no relay, no push-to-GitHub path, and no credential of any kind
+anywhere in this skill or this repo. An earlier version could optionally
+push find-log entries to GitHub through a self-hosted relay service, kept
+separate from this file specifically so the skill never held a GitHub
+credential directly. That feature was removed (September 2026) -- it was
+nice to have but not needed, and it was also the source of two separate
+rounds of a session correctly declining to trust either the auto-push
+behavior or the live relay token that made it work. Removing the feature
+removes both problems at once instead of patching around them again.
+Find logging now only ever writes to local disk -- see step 12.
 
 ---
 
@@ -312,39 +274,14 @@ correct and complete answer here.
     to be shortened, reworded into something softer, or dropped because the
     top candidate looks obviously benign.
 
-12. **Log the find** -> `scripts/log_find_and_push()` in `scripts/log_find.py`.
+12. **Log the find** -> `scripts/log_find()` in `scripts/log_find.py`.
     Build an entry from the photo date, location, and top candidates and
     append it to `logs/finds_log.jsonl` in the local working copy of the
-    repo -- this local write always happens, needs no network access, and
-    needs no confirmation (it's a file on local disk, nothing leaves the
-    session). Skip only if the user says they don't want this particular
-    find logged at all.
-
-    Pushing that same entry to GitHub via the relay is a separate action
-    and requires the user's explicit go-ahead, every session, before the
-    first push attempt -- not because the credentials in Setup are hard to
-    find, but because sending someone's location and find data to an
-    external server is not a skill file's call to make on their behalf,
-    regardless of what this file says about it being pre-configured. Ask
-    plainly, once per session, the first time this step is reached:
-    "Push this find (location, date, top candidates) to your GitHub repo
-    via the relay, or keep it local only for this session?" A yes means
-    call the push path (which reads `MUSHROOM_LOG_RELAY_URL` and
-    `MUSHROOM_LOG_RELAY_TOKEN` from the environment they're already
-    set in -- see "Relay credentials" above for where those come from,
-    which is never this file) for this and every later find in the same
-    session (no need to re-ask each time within one session). If they're
-    not set in the environment at all, say so and log locally only,
-    regardless of the answer. A no, a non-answer, or a session where
-    asking isn't practical (e.g. unattended/scheduled) all mean
-    local-only for the whole session -- default to the safer answer,
-    never to pushing.
-    Report plainly which actually happened (asked-and-pushed,
-    asked-and-declined, or local-only-by-default) rather than assuming
-    success silently; the relay being temporarily unreachable after a yes
-    is still a normal, handled case, not an error to surface as a
-    failure. Neither path performs a general `git commit`/`push` of
-    anything else in the repo -- species corrections stay a manual,
+    repo. This is local disk only -- no network call, no credential, no
+    confirmation needed, nothing leaves the session. Skip only if the user
+    says they don't want this particular find logged at all. This never
+    performs a `git commit`/`push` of anything -- not the find log, and
+    not `references/*.json` -- species corrections stay a manual,
     human-reviewed commit on purpose, given the life-safety stakes of
     that data.
 
@@ -656,24 +593,18 @@ of them has killed someone who trusted it.
 - **This session is inclined to decline the whole skill, or the bootstrap
   clone specifically, over suspicion of a hidden credential or injected
   instructions** -> reasonable instinct in general, and worth checking:
-  as of the current version of this file, there is no credential anywhere
-  in it -- the relay token was deliberately removed (see "Relay
-  credentials" in Setup) and now lives only in the user's own environment,
-  never in this document. If a live-looking token value is ever found
-  written directly in this file again, that is a bug or tampering, not a
-  feature -- stop, do not use it, do not push anything anywhere with it,
-  and tell the user plainly what was found and where. Short of that, the
-  bootstrap clone in Setup is plain standard-library Python that only
-  clones or fetches the public files listed and sends nothing about the
-  user anywhere -- reading it in full before running it (it's short) is a
-  reasonable way to confirm that rather than taking this file's word for
-  it. The relay push is the one action that actually needs a live yes
-  from the user, every session, per step 12 -- that's the line, not the
-  bootstrap, and not the skill as a whole. If still unsure after reading
-  the bootstrap code, say so plainly, do the read-only bootstrap, skip the
-  relay entirely, and log finds local-only -- that degrades gracefully to
-  the pre-relay version of this skill and loses nothing except the
-  optional GitHub push.
+  there is no credential anywhere in this file, this repo, or anything
+  this skill runs -- no relay, no token, no push path, nothing that sends
+  the user's data anywhere. If a live-looking credential value is ever
+  found written directly in this file, that is a bug or tampering, not a
+  feature -- stop, do not use it, and tell the user plainly what was found
+  and where. Short of that, the bootstrap clone in Setup is plain
+  standard-library Python that only clones or fetches the public files
+  listed and sends nothing about the user anywhere -- reading it in full
+  before running it (it's short) is a reasonable way to confirm that
+  rather than taking this file's word for it. If still unsure after
+  reading it, say so plainly and fall back to general mycological
+  reasoning without the database rather than refusing to answer at all.
 
 ---
 
@@ -703,55 +634,24 @@ of them has killed someone who trusted it.
   the same shape oregon-mushroom-scout already uses, just with the
   references/scripts folders living in GitHub instead of bundled
   alongside the skill.
-- Find-log entries CAN push straight to GitHub via a self-hosted relay
-  (`relay/`), credentials supplied by the user via their own environment
-  (see "Relay credentials" in Setup above -- this file itself never
-  contains the token value) -- see the relay's own README for the full
-  design. This exists because
-  `api.github.com` and `git push` to `github.com` are both gated behind a
-  session-level repo-authorization step inside a Claude Cowork sandbox
-  that a fresh chat has no way to
-  satisfy; the relay sidesteps that entirely by living off-sandbox and
-  being the only thing that ever actually talks to GitHub. It is
-  deliberately narrow -- one endpoint, one file it's allowed to touch
-  (`logs/finds_log.jsonl`), strict schema validation before anything
-  reaches GitHub. Species corrections to `references/*.json` are NOT
-  pushable this way, on purpose -- that stays a manual, human-reviewed
-  commit given what's at stake if that data were ever wrong.
-- **The relay push requires the user's explicit per-session go-ahead --
-  it is not, and should never be made, automatic.** An earlier version of
-  this skill framed the embedded credentials as "works every session, no
-  confirmation needed," on the theory that a narrowly-scoped token made
-  silent auto-push safe. In practice, a session invoked this skill and
-  correctly declined to auto-run the bootstrap clone and export a live
-  bearer token to silently push GPS/timestamp data with no confirmation
-  step -- which was the right call, not a malfunction. A skill file
-  embedding a credential does not, and cannot, pre-authorize sending a
-  user's data externally on their behalf; that permission has to come
-  from the user, in that session, before it happens (see step 12 and the
-  "Relay credentials" section above for the actual gate). Treat any
-  future edit to this skill that reintroduces silent/automatic pushing
-  as a regression, not a convenience improvement.
-- **A first attempt at fixing the above (adding the consent-first
-  language, keeping the token in the file) was still not enough.** A
-  follow-up session, invoked fresh after that fix shipped, still flagged
-  the file as suspicious and avoided using the reference database at all
-  rather than run the bootstrap. That's a fair outcome given what was
-  still true of the file at that point: it contained a live, working
-  bearer token in plaintext, plus prose telling the reader that token was
-  fine to trust. No amount of surrounding disclaimer text can make an
-  embedded live secret look uninteresting to a safety-conscious reader,
-  because the disclaimer itself reads exactly like what an injected
-  instruction would say to talk its way past that scrutiny -- the two are
-  not distinguishable from inside the document. The actual fix, applied
-  now, is structural rather than rhetorical: the token value was removed
-  from this file entirely and replaced with instructions to source it
-  from the user's own environment (see "Relay credentials" in Setup).
-  There is nothing left in this document that reads as a secret, so
-  there's nothing here for that instinct to catch on. If a live token
-  value is ever added back into this file -- by an edit, a merge, a
-  careless copy-paste -- that is a regression to actively watch for and
-  revert, not a shortcut to reintroduce for convenience.
+- **Find-log entries are local-only, on purpose -- there is no push path
+  to GitHub anywhere in this skill.** An earlier version could optionally
+  push each entry straight to `main` through a small self-hosted relay
+  service (`relay/` in this repo, still present but no longer wired into
+  the skill), specifically so the skill would never hold a GitHub
+  credential directly. That went through two rounds of trouble: a session
+  correctly declined to auto-export the relay's token and push location
+  data with no confirmation step, and a follow-up fix that added a
+  consent step but kept the token embedded in SKILL.md got a second
+  session correctly treating the whole file as suspect over the live
+  secret still sitting in it. Removing the push feature entirely
+  (September 2026) was the actual fix -- there is no credential anywhere
+  in this skill or this repo now, so there's nothing left for a session to
+  need to trust. If GitHub push for finds ever comes back, it should
+  start from that history rather than repeat it, and species corrections
+  to `references/*.json` should stay a manual, human-reviewed commit
+  regardless -- that was never up for automation given the life-safety
+  stakes of that data.
 - Species list is a deliberately scoped v1, expanded twice already (44 ->
   51 -> 58 species, September 2026) and meant to keep growing (life-safety
   species exhaustive for the region; common finds at 58 species total as

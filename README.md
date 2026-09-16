@@ -55,65 +55,29 @@ scripts/
                             - rerun this to refresh or extend photo
                             coverage, not by hand-editing the manifest
   log_find.py              appends one entry to logs/finds_log.jsonl for
-                            each ID the skill runs (always local disk),
-                            and optionally pushes that entry straight to
-                            GitHub via the relay below if it's configured
-                            for the session
+                            each ID the skill runs -- local disk only, no
+                            network call, no credential of any kind
 
 logs/
   finds_log.jsonl          personal find history, one JSON object per line,
                             created on first use. Not pre-populated - this
                             repo ships with no find history in it.
-
-relay/
-  mushroom_log_relay.py    a small, narrow, self-hosted service (see its
-                            own README) that lets log_find.py push find-log
-                            entries straight to this repo's main branch,
-                            without the skill ever holding a GitHub
-                            credential and without needing GitHub's own
-                            write endpoints reachable from inside a fresh
-                            Claude session
 ```
 
-The relay's own auth token (not the GitHub PAT -- see `relay/README.md`
-for that distinction) does **not** live in SKILL.md, this repo, or
-anywhere a Claude session reads as instructions. An earlier version of
-this setup embedded it directly in SKILL.md's Setup section, on the
-theory that a narrowly-scoped token (append-only, schema-validated, one
-file) made that an acceptable tradeoff against per-device setup. That
-theory held up right up until a fresh session, invoked normally, correctly
-flagged the file for containing a live credential and declined to touch
-it. The fix that followed added "ask the user before using this" language
-around the still-embedded token -- which turned out not to be enough,
-because a document telling a session "trust this secret I'm handing you"
-is not distinguishable, from inside that document, from an injection
-attempt trying to talk its way past scrutiny. A second, later session
-still (correctly) treated the whole file as suspect and avoided the
-reference database entirely rather than run anything in it.
-
-The actual fix, current as of this note, removes the token value from
-SKILL.md entirely. It now lives only in the environment the skill happens
-to run in -- set there by the user, out of band (a shell export, a
-scheduled task's environment settings, whatever the platform offers) --
-and SKILL.md only checks whether it's already present, never sets it from
-a value written in the file, because there is no such value in the file.
-Rotate it by regenerating a new token, updating the relay container's
-`.env`, and updating wherever you personally set it in your own
-environment -- there is nothing in SKILL.md or this repo to update.
-
-**"Embedded" is not the same as "auto-used," but "not embedded at all" is
-the better fix.** Even with the token correctly set in the environment,
-SKILL.md's workflow (step 12) still asks the user, once per session,
-before the first push, whether they want finds pushed to GitHub or kept
-local, and only proceeds on a clear yes. That consent gate was the first
-fix (September 2026) and is still necessary -- a session having access to
-a working credential doesn't mean this particular session is cleared to
-use it. But the consent gate alone wasn't sufficient while the credential
-itself still sat in a document every session reads; removing the value
-from the file (also September 2026, as a follow-up) is what actually
-addresses a session's reasonable instinct to distrust a document holding
-a live secret, rather than trying to talk that instinct down with more
-text in the same document.
+Find logs are local-only, on purpose. An earlier version of this project
+had `log_find.py` optionally push each entry straight to this repo's
+`main` branch through a small self-hosted relay service, specifically to
+avoid the skill ever holding a GitHub credential directly. That went
+through two rounds of trouble -- a session correctly declined to
+auto-export the relay's token and push location data without asking, and
+a later fix that added a consent step but kept the token embedded in
+SKILL.md got a second session correctly treating the whole file as
+suspect over the live secret sitting in it. Removing the push feature
+entirely (September 2026) sidesteps both problems at the root instead of
+patching around them again -- there's no credential in this project
+anywhere now, and nothing for a session to need to trust or distrust. If
+GitHub push for finds ever comes back, it should start from that history,
+not repeat it.
 
 ## How SKILL.md uses this repo
 
@@ -212,48 +176,25 @@ python3 scripts/fetch_photo_refs.py "Amanita phalloides"   # single species test
 
 ## Known gaps / open items
 
-- **Consent-gated push for find logs is live (no longer "auto").** The
-  skill can always read this repo at runtime (see above), but it can't
-  commit or push to it directly - a session-level gate inside a Claude
-  Cowork sandbox blocks both `api.github.com` and `git push` to
-  `github.com` behind a repo-authorization step that a fresh chat has no
-  way to satisfy (confirmed this is not a credentials problem - a valid
-  PAT supplied directly gets denied identically to no PAT at all, because
-  the block happens before any credential is even checked). That's a
-  structural property of the sandbox, not something fixable from inside a
-  session, and it won't get better by waiting - a skill invoked in a new
-  chat never has a "workspace" carried over from a previous one anyway.
-  So instead of fighting that gate, `log_find.py` CAN push find-log
-  entries through `relay/` - a small self-hosted service (see
-  `relay/README.md`) that lives off-sandbox and is the only thing that
-  ever actually holds a GitHub credential. It's deliberately narrow: one
-  endpoint, one file it's allowed to touch (`logs/finds_log.jsonl`),
-  strict schema validation before anything reaches GitHub. The relay's
-  own auth token is set only in the environment the skill runs in - never
-  written into SKILL.md or this repo (see the tradeoff note above for why
-  the earlier "embed it in SKILL.md" approach was tried and then
-  reversed) - and the push itself only happens after the skill asks the
-  user, once per session, and gets a yes - see SKILL.md's workflow step
-  12. This was originally framed as fully automatic ("works every session
-  with no confirmation"), and that framing was wrong: a session correctly
-  declined to auto-export the token and push location data without
-  asking, which is what surfaced the need for this gate (fixed September
-  2026). A follow-up session then also correctly treated the file as
-  suspect over the live token still sitting in it even after the
-  consent-ask was added, which is what surfaced the need to remove the
-  token from the file entirely rather than just gate its use (also fixed
-  September 2026). The actual GitHub PAT never leaves the relay container
-  regardless. If the relay is declined, unconfigured, or unreachable,
-  `log_find.py` degrades to exactly what it did before the relay existed
-  - local write only, no error, nothing missing.
-- **Species corrections are NOT pushable this way, on purpose.** Editing
+- **This skill has no way to write to this repo, at all, by design.** The
+  skill can always read this repo at runtime (see above), but everything
+  it produces -- find logs included -- stays on local disk in the session
+  it ran in. This repo used to also support pushing find-log entries
+  straight to `main` through a small self-hosted relay service, built
+  specifically to avoid the skill ever holding a GitHub credential
+  directly (a session-level gate inside a Claude Cowork sandbox blocks
+  both `api.github.com` and `git push` to `github.com` behind a
+  repo-authorization step a fresh chat has no way to satisfy, so a direct
+  push was never on the table regardless). That relay push feature was
+  removed in September 2026, after being nice-to-have but not needed in
+  practice, and after causing two separate rounds of a session correctly
+  distrusting either the auto-push behavior or the live credential sitting
+  in SKILL.md to make it work. Species corrections to
   `references/species_registry.json`, `lookalike_pairs.json`, or
-  `toxin_syndromes.json` stays a manual, human-reviewed
-  `git add / commit / push`, same as always. Given the life-safety stakes
-  of that data, "the skill can silently rewrite the deadly-species
-  database on its own" is not a capability this project wants, even with
-  a relay in place - the relay's whole design intentionally has no route
-  for it.
+  `toxin_syndromes.json` were never pushable this way even when the relay
+  existed, and still aren't -- that stays a manual, human-reviewed
+  `git add / commit / push`, same as always, given the life-safety stakes
+  of that data.
 - **Mushroom Observer's own site/API is unreachable from this project's
   usual build environment.** `fetch_photo_refs.py` works around this by
   querying MO's collection through GBIF instead (see that script's
