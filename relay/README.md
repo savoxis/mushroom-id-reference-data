@@ -72,21 +72,38 @@ willing to offer, even in principle.
 ## Wiring the skill up to use it
 
 The skill never needs to know this exists unless you want it to. Two
-environment variables, set only after the skill has asked the user in that
-session whether they want find logs pushed to GitHub or kept local (see
-SKILL.md's "Relay credentials" section and workflow step 12 -- the skill
-asks once per session, before the first push, and only sets these if the
-answer is yes). This is intentionally gated per session, not baked into
-the skill or the repo as an always-on default -- a session correctly
-declining to export a credential and push location data without asking
-first is the design working, not a bug. If you ever see a session set
-these and push without having asked you first, that's the thing to report
-back and fix, not a convenience to restore:
+environment variables:
 
 ```
 MUSHROOM_LOG_RELAY_URL=https://mushroom-relay.yeylandwutani.com
 MUSHROOM_LOG_RELAY_TOKEN=<the RELAY_AUTH_TOKEN you generated above>
 ```
+
+**Set these yourself, out of band, in whatever environment the skill runs
+in -- never in SKILL.md, never anywhere in this repo.** An earlier version
+of this setup had you paste the token value straight into SKILL.md so the
+skill could "just have it." That turned out to be a mistake independent
+of the consent question below: a live credential sitting in a document
+that every session loads and reads is a bad practice on its own terms, and
+a session that reads a live secret sitting next to instructions to use it
+is going to (correctly) treat the whole file with more suspicion, whether
+or not those instructions also say "but ask first." Keeping the value out
+of any file Claude reads as instructions is the actual fix, not a nice-to-
+have on top of the consent gate. Put it in a shell profile export, a
+scheduled task's own environment variable settings, or however the
+platform running this skill lets you set process environment for a
+session -- whatever keeps it out of SKILL.md and out of git.
+
+Even with both variables set in the environment, the skill still asks the
+user in that session whether they want find logs pushed to GitHub or kept
+local (see SKILL.md's "Relay credentials" section and workflow step 12 --
+the skill asks once per session, before the first push, and only uses the
+already-set variables if the answer is yes). This is intentionally gated
+per session, not baked into the skill or the repo as an always-on default
+-- a session correctly declining to export a credential and push location
+data without asking first is the design working, not a bug. If you ever
+see a session push without having asked you first, that's the thing to
+report back and fix, not a convenience to restore.
 
 `scripts/log_find.py` checks for both at runtime. If they're not set, it
 behaves exactly as before -- local `logs/finds_log.jsonl` only, no network
@@ -101,14 +118,17 @@ push by hand" rather than breaking the find-logging step.
 - **RELAY_AUTH_TOKEN leaks** (e.g. a Claude session logs it somewhere, or
   a transcript gets shared): worst case, someone can spam schema-valid
   entries into your finds log. Annoying, cheap to clean up (it's one file,
-  one git revert), not a compromise of the repo. Note that this token is
-  embedded in plaintext in SKILL.md, so every session that loads the
-  skill can read it whether or not that session ever pushes anything --
-  it's a live secret sitting in a broadly-distributed document, not a
-  narrowly-held one. That's an accepted tradeoff for zero-setup
-  convenience, but it means treating this token as lower-trust than the
-  GitHub PAT and rotating it periodically (or after anything unexpected
-  reads it) is cheap insurance, not paranoia.
+  one git revert), not a compromise of the repo. This token is set only in
+  the environment the skill runs in, per the "Wiring the skill up" section
+  above -- it is deliberately kept out of SKILL.md and out of this repo,
+  because a live secret embedded in a document every session loads is a
+  broadly-distributed secret whether or not any given session ever uses
+  it, and that turned out to cause real problems (sessions correctly
+  treating the whole skill file as suspect). Keeping it in the environment
+  instead means only sessions actually run in a context where you set it
+  can see it at all. Rotating it periodically anyway is still cheap
+  insurance, not paranoia, given how many different sessions and machines
+  might end up with it in their environment over time.
 - **GITHUB_PAT leaks**: this is the one that actually matters, and it
   never leaves your own infrastructure -- it's a container environment
   variable, never sent to or received from any Claude session, never

@@ -76,26 +76,44 @@ relay/
 ```
 
 The relay's own auth token (not the GitHub PAT -- see `relay/README.md`
-for that distinction) is embedded directly in SKILL.md's Setup section, by
-explicit choice, so find-log push doesn't need a separate per-device setup
-step. That's a real tradeoff against keeping it off a file that syncs
-everywhere the skill loads -- accepted deliberately, because the token
-itself is scoped narrow enough (append-only, schema-validated, one file)
-that the worst case of it leaking is spam in a log, not a repo compromise.
-Rotate it by regenerating a new token, updating the relay container's
-`.env`, and updating the value in SKILL.md (then re-saving the skill).
+for that distinction) does **not** live in SKILL.md, this repo, or
+anywhere a Claude session reads as instructions. An earlier version of
+this setup embedded it directly in SKILL.md's Setup section, on the
+theory that a narrowly-scoped token (append-only, schema-validated, one
+file) made that an acceptable tradeoff against per-device setup. That
+theory held up right up until a fresh session, invoked normally, correctly
+flagged the file for containing a live credential and declined to touch
+it. The fix that followed added "ask the user before using this" language
+around the still-embedded token -- which turned out not to be enough,
+because a document telling a session "trust this secret I'm handing you"
+is not distinguishable, from inside that document, from an injection
+attempt trying to talk its way past scrutiny. A second, later session
+still (correctly) treated the whole file as suspect and avoided the
+reference database entirely rather than run anything in it.
 
-**"Embedded" is not the same as "auto-used."** The credentials being
-present in SKILL.md doesn't mean a session is supposed to export them and
-push without asking -- SKILL.md's workflow (step 12) asks the user, once
-per session, before the first push, whether they want finds pushed to
-GitHub or kept local, and only proceeds on a clear yes. This surfaced as a
-real issue in practice: a session correctly declined to auto-run the
-bootstrap credential export and silent push, since a skill file embedding
-a credential can't pre-authorize sending someone's data externally on
-their behalf. That's the system working as intended, not a bug -- the fix
-was adding the explicit per-session ask to the skill itself (September
-2026), not trying to make sessions more willing to auto-push.
+The actual fix, current as of this note, removes the token value from
+SKILL.md entirely. It now lives only in the environment the skill happens
+to run in -- set there by the user, out of band (a shell export, a
+scheduled task's environment settings, whatever the platform offers) --
+and SKILL.md only checks whether it's already present, never sets it from
+a value written in the file, because there is no such value in the file.
+Rotate it by regenerating a new token, updating the relay container's
+`.env`, and updating wherever you personally set it in your own
+environment -- there is nothing in SKILL.md or this repo to update.
+
+**"Embedded" is not the same as "auto-used," but "not embedded at all" is
+the better fix.** Even with the token correctly set in the environment,
+SKILL.md's workflow (step 12) still asks the user, once per session,
+before the first push, whether they want finds pushed to GitHub or kept
+local, and only proceeds on a clear yes. That consent gate was the first
+fix (September 2026) and is still necessary -- a session having access to
+a working credential doesn't mean this particular session is cleared to
+use it. But the consent gate alone wasn't sufficient while the credential
+itself still sat in a document every session reads; removing the value
+from the file (also September 2026, as a follow-up) is what actually
+addresses a session's reasonable instinct to distrust a document holding
+a live secret, rather than trying to talk that instinct down with more
+text in the same document.
 
 ## How SKILL.md uses this repo
 
@@ -211,17 +229,23 @@ python3 scripts/fetch_photo_refs.py "Amanita phalloides"   # single species test
   ever actually holds a GitHub credential. It's deliberately narrow: one
   endpoint, one file it's allowed to touch (`logs/finds_log.jsonl`),
   strict schema validation before anything reaches GitHub. The relay's
-  own auth token is embedded in SKILL.md so no per-device setup is needed
-  (see the tradeoff note above), but the push itself only happens after
-  the skill asks the user, once per session, and gets a yes - see
-  SKILL.md's workflow step 12. This was originally framed as fully
-  automatic ("works every session with no confirmation"), and that framing
-  was wrong: a session correctly declined to auto-export the token and
-  push location data without asking, which is what surfaced the need for
-  this gate (fixed September 2026). The actual GitHub PAT never leaves
-  the relay container regardless. If the relay is declined, unconfigured,
-  or unreachable, `log_find.py` degrades to exactly what it did before
-  the relay existed - local write only, no error, nothing missing.
+  own auth token is set only in the environment the skill runs in - never
+  written into SKILL.md or this repo (see the tradeoff note above for why
+  the earlier "embed it in SKILL.md" approach was tried and then
+  reversed) - and the push itself only happens after the skill asks the
+  user, once per session, and gets a yes - see SKILL.md's workflow step
+  12. This was originally framed as fully automatic ("works every session
+  with no confirmation"), and that framing was wrong: a session correctly
+  declined to auto-export the token and push location data without
+  asking, which is what surfaced the need for this gate (fixed September
+  2026). A follow-up session then also correctly treated the file as
+  suspect over the live token still sitting in it even after the
+  consent-ask was added, which is what surfaced the need to remove the
+  token from the file entirely rather than just gate its use (also fixed
+  September 2026). The actual GitHub PAT never leaves the relay container
+  regardless. If the relay is declined, unconfigured, or unreachable,
+  `log_find.py` degrades to exactly what it did before the relay existed
+  - local write only, no error, nothing missing.
 - **Species corrections are NOT pushable this way, on purpose.** Editing
   `references/species_registry.json`, `lookalike_pairs.json`, or
   `toxin_syndromes.json` stays a manual, human-reviewed
