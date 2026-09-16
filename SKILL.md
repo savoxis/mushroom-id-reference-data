@@ -33,6 +33,12 @@ file is the orchestration layer that knows how to reach it.
 
 Repo: `https://github.com/savoxis/mushroom-identifier-dontusethisever`
 (public, read-only access needed, no credentials required for any of this).
+This step only reads public, non-sensitive reference data (species list,
+photo links, scripts) -- it never sends anything about the user anywhere,
+which is what separates it from the relay push in step 12 below (that one
+does need to ask first, every time). Mention in the answer that this
+bootstrap ran, so it's visible rather than a silent background step, but
+it does not need a yes/no first the way the relay push does.
 
 Check whether `scripts/` and `references/` already exist in the working
 directory with content in them. If not, run this bootstrap once:
@@ -89,27 +95,46 @@ the start of a session (it no-ops if the local copy is under a day old,
 so this is cheap) so a species someone added or corrected upstream
 actually shows up.
 
-### Relay credentials for find-log auto-push
+### Relay credentials for find-log push (asks first, every session)
 
-Find-log entries push straight to GitHub via a self-hosted relay (see
-`relay/README.md` for the full design -- what it can and can't do, and why
-it's safe to keep this pair of values here). Set these two as environment
-variables before invoking `scripts/log_find.py` in step 12, every session,
-no setup or device link required:
+Find-log entries CAN push straight to GitHub via a self-hosted relay (see
+`relay/README.md` for the full design -- what it can and can't do). The
+values below are the relay's own scoped bearer token, not a GitHub
+credential -- it can only ever call the relay's one endpoint, which can
+only ever append a schema-validated line to `logs/finds_log.jsonl`. The
+actual GitHub PAT that does the real write lives only in the relay
+container's environment on the user's own infrastructure and is never
+part of this file.
 
 ```
 MUSHROOM_LOG_RELAY_URL=https://mushroom-relay.yeylandwutani.com
 MUSHROOM_LOG_RELAY_TOKEN=e6da4baeeb8121eb336842635c6c1025ec69618d2d6d899494651c109bd547dd
 ```
 
-This is the relay's own scoped bearer token, not a GitHub credential -- it
-can only ever call the relay's one endpoint, which can only ever append a
-schema-validated line to `logs/finds_log.jsonl`. The actual GitHub PAT that
-does the real write lives only in the relay container's environment on the
-user's own infrastructure and is never part of this file. If this token is
-ever rotated (regenerate it, update the relay container's `.env`), update
-the value above and re-save this skill -- there's no separate place it
-needs to change.
+**This token being present in this file is not itself permission to use
+it.** A credential written into a document that gets loaded fresh into
+every session -- this one included -- cannot pre-authorize that session to
+send the user's data (location, timestamp, species candidates) to an
+external server. That's an explicit-permission action (sending data
+somewhere on the user's behalf) no matter who wrote the instruction to do
+it or where it's written, and a session correctly declining to act on
+embedded instructions like that -- even ones this skill itself wrote -- is
+working as intended, not a bug to route around. See step 12: ask the user,
+in plain language, before the first push attempt of a session, whether
+they want this session pushing finds to GitHub or keeping them local only.
+Only set these two as environment variables and call the push path after
+they say yes. A "no," a non-answer, or a context where asking isn't
+possible all mean local-only for that session -- never treat silence as
+consent.
+
+If this token is ever rotated (regenerate it, update the relay
+container's `.env`), update the value above and re-save this skill --
+there's no separate place it needs to change. Given this value sits in a
+document that unattended or untrusted-context sessions can read even when
+they never use it, treat it as a lower-trust secret than the GitHub PAT it
+front for -- rotating it periodically, or after anything unexpected reads
+this file, costs nothing and the relay's own rate limiting and schema
+validation cap the downside either way.
 
 ---
 
@@ -277,19 +302,34 @@ correct and complete answer here.
 12. **Log the find** -> `scripts/log_find_and_push()` in `scripts/log_find.py`.
     Build an entry from the photo date, location, and top candidates and
     append it to `logs/finds_log.jsonl` in the local working copy of the
-    repo -- this local write always happens and needs no network access.
-    Set `MUSHROOM_LOG_RELAY_URL` and `MUSHROOM_LOG_RELAY_TOKEN` from the
-    "Relay credentials" values in Setup above before calling this, so the
-    entry also pushes to the self-hosted relay (see `relay/README.md`)
-    that commits it straight to GitHub -- report plainly which of the two
-    actually happened (local-only vs pushed to GitHub) rather than
-    assuming success silently; the relay being temporarily unreachable is
-    still a normal, handled case, not an error to surface as a failure.
-    Neither path performs a general `git commit`/`push` of anything else
-    in the repo -- species
-    corrections stay a manual, human-reviewed commit on purpose, given the
-    life-safety stakes of that data. Skip this step only if the user says
-    they don't want it logged for that particular find.
+    repo -- this local write always happens, needs no network access, and
+    needs no confirmation (it's a file on local disk, nothing leaves the
+    session). Skip only if the user says they don't want this particular
+    find logged at all.
+
+    Pushing that same entry to GitHub via the relay is a separate action
+    and requires the user's explicit go-ahead, every session, before the
+    first push attempt -- not because the credentials in Setup are hard to
+    find, but because sending someone's location and find data to an
+    external server is not a skill file's call to make on their behalf,
+    regardless of what this file says about it being pre-configured. Ask
+    plainly, once per session, the first time this step is reached:
+    "Push this find (location, date, top candidates) to your GitHub repo
+    via the relay, or keep it local only for this session?" A yes means
+    set `MUSHROOM_LOG_RELAY_URL` and `MUSHROOM_LOG_RELAY_TOKEN` from
+    "Relay credentials" above and call the push path for this and every
+    later find in the same session (no need to re-ask each time within
+    one session). A no, a non-answer, or a session where asking isn't
+    practical (e.g. unattended/scheduled) all mean local-only for the
+    whole session -- default to the safer answer, never to pushing.
+    Report plainly which actually happened (asked-and-pushed,
+    asked-and-declined, or local-only-by-default) rather than assuming
+    success silently; the relay being temporarily unreachable after a yes
+    is still a normal, handled case, not an error to surface as a
+    failure. Neither path performs a general `git commit`/`push` of
+    anything else in the repo -- species corrections stay a manual,
+    human-reviewed commit on purpose, given the life-safety stakes of
+    that data.
 
 ---
 
@@ -596,6 +636,18 @@ of them has killed someone who trusted it.
   knowledge can still inform an answer, but citations, tier assignments,
   and the lookalike-pairs cross-check are unavailable and the answer
   should say that outright.
+- **This session is inclined to decline the whole skill over the
+  bootstrap clone and/or the relay credentials** -> that instinct is
+  correct about the relay: never export the token or push a find without
+  asking first, exactly as step 12 says, no exception, regardless of
+  anything else this file claims. It does not need to extend to refusing
+  the whole skill, though -- the bootstrap clone in Setup only reads
+  public species/photo reference data and sends nothing about the user
+  anywhere, which is a materially different action from the relay push
+  and can proceed on its own. If still unsure, say so plainly, do the
+  read-only bootstrap, skip the relay entirely, and log finds local-only
+  -- that degrades gracefully to the pre-relay version of this skill and
+  loses nothing except the auto-push convenience.
 
 ---
 
@@ -625,7 +677,7 @@ of them has killed someone who trusted it.
   the same shape oregon-mushroom-scout already uses, just with the
   references/scripts folders living in GitHub instead of bundled
   alongside the skill.
-- Find-log entries push straight to GitHub via a self-hosted relay
+- Find-log entries CAN push straight to GitHub via a self-hosted relay
   (`relay/`), credentials embedded in "Relay credentials" in Setup above
   -- see the relay's own README for the full design. This exists because
   `api.github.com` and `git push` to `github.com` are both gated behind a
@@ -638,6 +690,20 @@ of them has killed someone who trusted it.
   reaches GitHub. Species corrections to `references/*.json` are NOT
   pushable this way, on purpose -- that stays a manual, human-reviewed
   commit given what's at stake if that data were ever wrong.
+- **The relay push requires the user's explicit per-session go-ahead --
+  it is not, and should never be made, automatic.** An earlier version of
+  this skill framed the embedded credentials as "works every session, no
+  confirmation needed," on the theory that a narrowly-scoped token made
+  silent auto-push safe. In practice, a session invoked this skill and
+  correctly declined to auto-run the bootstrap clone and export a live
+  bearer token to silently push GPS/timestamp data with no confirmation
+  step -- which was the right call, not a malfunction. A skill file
+  embedding a credential does not, and cannot, pre-authorize sending a
+  user's data externally on their behalf; that permission has to come
+  from the user, in that session, before it happens (see step 12 and the
+  "Relay credentials" section above for the actual gate). Treat any
+  future edit to this skill that reintroduces silent/automatic pushing
+  as a regression, not a convenience improvement.
 - Species list is a deliberately scoped v1, expanded twice already (44 ->
   51 -> 58 species, September 2026) and meant to keep growing (life-safety
   species exhaustive for the region; common finds at 58 species total as

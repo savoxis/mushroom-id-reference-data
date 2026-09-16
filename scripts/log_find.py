@@ -14,10 +14,18 @@ The local append always happens and never depends on network access -- see
 log_find() below. Separately, if MUSHROOM_LOG_RELAY_URL and
 MUSHROOM_LOG_RELAY_TOKEN are set in the environment, this also POSTs the
 entry to a self-hosted relay (see ../relay/README.md) that commits it
-straight to the repo's logs/finds_log.jsonl on GitHub. That's opt-in per
-session, not something this script or the skill assumes is available --
-with neither variable set, this behaves exactly as if the relay didn't
-exist: local write only, no network call, no error. Use
+straight to the repo's logs/finds_log.jsonl on GitHub. With neither
+variable set, this behaves exactly as if the relay didn't exist: local
+write only, no network call, no error.
+
+This script itself has no way to know whether the user actually agreed to
+a GitHub push this session -- that's a conversation the skill has with the
+user, not something this script can check. SKILL.md's workflow only sets
+these two environment variables after asking the user, once per session,
+whether they want finds pushed or kept local -- this script trusts that
+gate and pushes whenever it sees both variables set. Anything that calls
+this script directly (manual testing, another tool) needs to apply that
+same gate itself rather than setting the variables unconditionally. Use
 log_find_and_push(entry) from the skill workflow, which does both steps
 and reports honestly on each; log_find(entry) alone is still here for
 anything that only wants the local write.

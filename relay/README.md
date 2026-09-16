@@ -72,9 +72,16 @@ willing to offer, even in principle.
 ## Wiring the skill up to use it
 
 The skill never needs to know this exists unless you want it to. Two
-environment variables, set wherever a given Claude session should be
-allowed to push find logs (this is intentionally opt-in per session, not
-baked into the skill or the repo):
+environment variables, set only after the skill has asked the user in that
+session whether they want find logs pushed to GitHub or kept local (see
+SKILL.md's "Relay credentials" section and workflow step 12 -- the skill
+asks once per session, before the first push, and only sets these if the
+answer is yes). This is intentionally gated per session, not baked into
+the skill or the repo as an always-on default -- a session correctly
+declining to export a credential and push location data without asking
+first is the design working, not a bug. If you ever see a session set
+these and push without having asked you first, that's the thing to report
+back and fix, not a convenience to restore:
 
 ```
 MUSHROOM_LOG_RELAY_URL=https://mushroom-relay.yeylandwutani.com
@@ -94,7 +101,14 @@ push by hand" rather than breaking the find-logging step.
 - **RELAY_AUTH_TOKEN leaks** (e.g. a Claude session logs it somewhere, or
   a transcript gets shared): worst case, someone can spam schema-valid
   entries into your finds log. Annoying, cheap to clean up (it's one file,
-  one git revert), not a compromise of the repo.
+  one git revert), not a compromise of the repo. Note that this token is
+  embedded in plaintext in SKILL.md, so every session that loads the
+  skill can read it whether or not that session ever pushes anything --
+  it's a live secret sitting in a broadly-distributed document, not a
+  narrowly-held one. That's an accepted tradeoff for zero-setup
+  convenience, but it means treating this token as lower-trust than the
+  GitHub PAT and rotating it periodically (or after anything unexpected
+  reads it) is cheap insurance, not paranoia.
 - **GITHUB_PAT leaks**: this is the one that actually matters, and it
   never leaves your own infrastructure -- it's a container environment
   variable, never sent to or received from any Claude session, never
