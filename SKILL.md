@@ -89,45 +89,27 @@ the start of a session (it no-ops if the local copy is under a day old,
 so this is cheap) so a species someone added or corrected upstream
 actually shows up.
 
-### Auto-loading relay credentials, when this device has them
+### Relay credentials for find-log auto-push
 
-Find-log entries can push straight to GitHub via a self-hosted relay (see
-`relay/README.md` for the full design) if `MUSHROOM_LOG_RELAY_URL` and
-`MUSHROOM_LOG_RELAY_TOKEN` are set for the session. Typing those in every
-time is real friction, so when this session is linked to the device where
-the repo folder lives, check for a local, git-ignored credentials file at
-the repo root -- `.claude-relay-credentials.env` -- before falling back to
-"not configured this session." This file is never fetched from GitHub,
-never part of this skill's own text, and never leaves the user's machine --
-it exists on disk in the connected folder only, exactly the same way any
-local secret would sit next to a script that reads it at runtime rather
-than having it typed fresh or hardcoded into the script itself.
+Find-log entries push straight to GitHub via a self-hosted relay (see
+`relay/README.md` for the full design -- what it can and can't do, and why
+it's safe to keep this pair of values here). Set these two as environment
+variables before invoking `scripts/log_find.py` in step 12, every session,
+no setup or device link required:
 
-1. If the device bridge is present (`mcp__remote-devices__*` tools in this
-   session) and the repo's folder is among the connected folders, look for
-   `.claude-relay-credentials.env` at that folder's root.
-2. Prefer reading it in place if a device-shell tool is available (a
-   simple `type` on Windows / `cat` elsewhere) -- it is a two-line file,
-   there's no reason to stage it as an upload. If no device-shell tool is
-   available or the read fails, staging this one small file to look at it
-   is a reasonable fallback (unlike the multi-megabyte reference data,
-   this is cheap and rare).
-3. If the file exists, parse its two `KEY=VALUE` lines (ignore blank
-   lines and anything starting with `#`) and use those values as
-   `MUSHROOM_LOG_RELAY_URL` / `MUSHROOM_LOG_RELAY_TOKEN` for step 12 later
-   in this session -- pass them as environment variables when invoking
-   `scripts/log_find.py`, do not write them into any file this skill
-   itself produces or repeats back.
-4. If the file does not exist, the device isn't linked, or the folder
-   isn't connected, this is not an error -- it just means this session
-   falls back to local-only logging, same as it always did before the
-   relay existed. Never ask the user to paste the token in this case
-   unless they bring it up themselves; a session without the linked
-   device is a normal, expected case, not a broken one.
-5. Never echo the token's value back in an answer, a log, or a commit
-   message -- read it, use it for the one HTTP call it's needed for, and
-   let it go out of scope. The whole point of keeping it out of this
-   file's text is defeated if a transcript ends up holding it anyway.
+```
+MUSHROOM_LOG_RELAY_URL=https://mushroom-relay.yeylandwutani.com
+MUSHROOM_LOG_RELAY_TOKEN=e6da4baeeb8121eb336842635c6c1025ec69618d2d6d899494651c109bd547dd
+```
+
+This is the relay's own scoped bearer token, not a GitHub credential -- it
+can only ever call the relay's one endpoint, which can only ever append a
+schema-validated line to `logs/finds_log.jsonl`. The actual GitHub PAT that
+does the real write lives only in the relay container's environment on the
+user's own infrastructure and is never part of this file. If this token is
+ever rotated (regenerate it, update the relay container's `.env`), update
+the value above and re-save this skill -- there's no separate place it
+needs to change.
 
 ---
 
@@ -295,12 +277,15 @@ correct and complete answer here.
     Build an entry from the photo date, location, and top candidates and
     append it to `logs/finds_log.jsonl` in the local working copy of the
     repo -- this local write always happens and needs no network access.
-    If `MUSHROOM_LOG_RELAY_URL` and `MUSHROOM_LOG_RELAY_TOKEN` are set for
-    this session, it also pushes the same entry to a self-hosted relay
-    (see `relay/README.md`) that commits it straight to GitHub -- report
-    plainly which of the two actually happened (local-only vs pushed to
-    GitHub) rather than assuming success silently. Neither path performs a
-    general `git commit`/`push` of anything else in the repo -- species
+    Set `MUSHROOM_LOG_RELAY_URL` and `MUSHROOM_LOG_RELAY_TOKEN` from the
+    "Relay credentials" values in Setup above before calling this, so the
+    entry also pushes to the self-hosted relay (see `relay/README.md`)
+    that commits it straight to GitHub -- report plainly which of the two
+    actually happened (local-only vs pushed to GitHub) rather than
+    assuming success silently; the relay being temporarily unreachable is
+    still a normal, handled case, not an error to surface as a failure.
+    Neither path performs a general `git commit`/`push` of anything else
+    in the repo -- species
     corrections stay a manual, human-reviewed commit on purpose, given the
     life-safety stakes of that data. Skip this step only if the user says
     they don't want it logged for that particular find.
@@ -639,11 +624,12 @@ of them has killed someone who trusted it.
   the same shape oregon-mushroom-scout already uses, just with the
   references/scripts folders living in GitHub instead of bundled
   alongside the skill.
-- Find-log entries CAN push straight to GitHub now, via an optional
-  self-hosted relay (`relay/`) -- see its README for the full design and
-  setup. This exists because `api.github.com` and `git push` to
-  `github.com` are both gated behind a session-level repo-authorization
-  step inside a Claude Cowork sandbox that a fresh chat has no way to
+- Find-log entries push straight to GitHub via a self-hosted relay
+  (`relay/`), credentials embedded in "Relay credentials" in Setup above
+  -- see the relay's own README for the full design. This exists because
+  `api.github.com` and `git push` to `github.com` are both gated behind a
+  session-level repo-authorization step inside a Claude Cowork sandbox
+  that a fresh chat has no way to
   satisfy; the relay sidesteps that entirely by living off-sandbox and
   being the only thing that ever actually talks to GitHub. It is
   deliberately narrow -- one endpoint, one file it's allowed to touch

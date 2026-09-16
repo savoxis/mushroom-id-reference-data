@@ -67,16 +67,17 @@ relay/
                             credential and without needing GitHub's own
                             write endpoints reachable from inside a fresh
                             Claude session
-
-.claude-relay-credentials.env.example
-                            template for a git-ignored, local-only file
-                            (.claude-relay-credentials.env, not committed)
-                            that a Claude session reads straight off disk
-                            when it's linked to this device, so the relay
-                            token never has to be typed into a chat or
-                            baked into SKILL.md's own text. See SKILL.md's
-                            "Auto-loading relay credentials" section.
 ```
+
+The relay's own auth token (not the GitHub PAT -- see `relay/README.md`
+for that distinction) is embedded directly in SKILL.md's Setup section, by
+explicit choice, so find-log push works every session with no per-device
+setup. That's a real tradeoff against keeping it off a file that syncs
+everywhere the skill loads -- made deliberately, because the token itself
+is scoped narrow enough (append-only, schema-validated, one file) that the
+worst case of it leaking is spam in a log, not a repo compromise. Rotate
+it by regenerating a new token, updating the relay container's `.env`, and
+updating the value in SKILL.md (then re-saving the skill).
 
 ## How SKILL.md uses this repo
 
@@ -132,25 +133,28 @@ python3 scripts/fetch_photo_refs.py "Amanita phalloides"   # single species test
 
 ## Known gaps / open items
 
-- **Auto-push for find logs exists, but it's opt-in and needs one-time
-  setup.** The skill can always read this repo at runtime (see above), but
-  it can't commit or push to it directly - a session-level gate inside a
-  Claude Cowork sandbox blocks both `api.github.com` and `git push` to
-  `github.com` behind a repo-authorization step that a fresh chat has no
-  way to satisfy (confirmed this is not a credentials problem - a valid
-  PAT supplied directly gets denied identically to no PAT at all, because
-  the block happens before any credential is even checked). That's a
-  structural property of the sandbox, not something fixable from inside a
-  session, and it won't get better by waiting - a skill invoked in a new
-  chat never has a "workspace" carried over from a previous one anyway.
-  So instead of fighting that gate, `log_find.py` can push find-log
-  entries through `relay/` - a small self-hosted service (see
-  `relay/README.md`) that lives off-sandbox and is the only thing that
-  ever actually holds a GitHub credential. It's deliberately narrow: one
-  endpoint, one file it's allowed to touch (`logs/finds_log.jsonl`),
-  strict schema validation before anything reaches GitHub. Without the
-  relay set up, `log_find.py` behaves exactly as it always did - local
-  write only, no error, nothing missing.
+- **Auto-push for find logs is live.** The skill can always read this
+  repo at runtime (see above), but it can't commit or push to it directly
+  - a session-level gate inside a Claude Cowork sandbox blocks both
+  `api.github.com` and `git push` to `github.com` behind a
+  repo-authorization step that a fresh chat has no way to satisfy
+  (confirmed this is not a credentials problem - a valid PAT supplied
+  directly gets denied identically to no PAT at all, because the block
+  happens before any credential is even checked). That's a structural
+  property of the sandbox, not something fixable from inside a session,
+  and it won't get better by waiting - a skill invoked in a new chat
+  never has a "workspace" carried over from a previous one anyway. So
+  instead of fighting that gate, `log_find.py` pushes find-log entries
+  through `relay/` - a small self-hosted service (see `relay/README.md`)
+  that lives off-sandbox and is the only thing that ever actually holds a
+  GitHub credential. It's deliberately narrow: one endpoint, one file
+  it's allowed to touch (`logs/finds_log.jsonl`), strict schema
+  validation before anything reaches GitHub. The relay's own auth token
+  is embedded in SKILL.md so this works every session with no per-device
+  setup (see the tradeoff note above); the actual GitHub PAT never
+  leaves the relay container. If the relay container itself is ever
+  down or unreachable, `log_find.py` degrades to exactly what it did
+  before the relay existed - local write only, no error, nothing missing.
 - **Species corrections are NOT pushable this way, on purpose.** Editing
   `references/species_registry.json`, `lookalike_pairs.json`, or
   `toxin_syndromes.json` stays a manual, human-reviewed
